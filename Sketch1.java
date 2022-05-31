@@ -3,8 +3,7 @@ import processing.core.PImage;
 
 public class Sketch1 extends PApplet {
   PImage background1;
-  PImage playerJoe;
-  PImage oryx1;
+  PImage playerSprite;
 
   int playerX;
   int playerY;
@@ -13,6 +12,8 @@ public class Sketch1 extends PApplet {
   boolean downPressed;
   boolean leftPressed;
   boolean rightPressed;
+
+  PImage [] player = new PImage[8];
 
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -28,11 +29,18 @@ public class Sketch1 extends PApplet {
    */
   public void setup() {
     background(210, 255, 173);
-    background1 = loadImage("background-game.png");
-    playerJoe = loadImage("Gardevoir_Up.png");
-    oryx1 = loadImage("black_default_final.png");
+    background1 = loadImage("normal_background.png");
+    player[0] = loadImage("Gardevoir_Up.png");
+    player[1] = loadImage("Gardevoir_Down.png");
+    player[2] = loadImage("Gardevoir_Right.png");
+    player[3] = loadImage("Gardevoir_Left.png");
+    player[4] = loadImage("Gardevoir_Up_Left.png");
+    player[5] = loadImage("Gardevoir_Up_Right.png");
+    player[6] = loadImage("Gardevoir_Down_Left.png");
+    player[7] = loadImage("Gardevoir_Down_Right.png");
     playerX = 400;
     playerY = 400;
+    playerSprite = player[1];
   }
 
   /**
@@ -41,22 +49,37 @@ public class Sketch1 extends PApplet {
   public void draw() {
     if(upPressed){
       playerY -= playerSpd;
+      playerSprite = player[0];
     }
     if(downPressed){
       playerY += playerSpd;
+      playerSprite = player[1];
+
     }
     if(leftPressed){
       playerX -= playerSpd;
+      playerSprite = player[3];
     }
     if(rightPressed){
       playerX += playerSpd;
+      playerSprite = player[2];
+    }
+    if (upPressed && leftPressed) {
+      playerSprite = player[4];
+    }
+    if (upPressed && rightPressed) {
+      playerSprite = player[5];
+    }
+    if (downPressed && leftPressed) {
+      playerSprite = player[6];
+    }
+    if (downPressed && rightPressed) {
+      playerSprite = player[7];
     }
     translate(-playerX+400, -playerY+400);
-
 	  image(background1, 0, 0);
-    image(playerJoe, 100, 100);
     
-    image(playerJoe, playerX, playerY);
+    image(playerSprite, playerX, playerY);
   }
 
   // Set booleans when wasd keys are pressed
