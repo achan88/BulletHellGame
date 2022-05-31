@@ -3,7 +3,7 @@ import processing.core.PImage;
 
 public class Sketch1 extends PApplet {
   PImage background1;
-  PImage playerJoe;
+  PImage playerSprite;
 
   int playerX;
   int playerY;
@@ -40,7 +40,7 @@ public class Sketch1 extends PApplet {
     player[7] = loadImage("Gardevoir_Down_Right.png");
     playerX = 400;
     playerY = 400;
-    playerJoe = player[1];
+    playerSprite = player[1];
   }
 
   /**
@@ -49,37 +49,37 @@ public class Sketch1 extends PApplet {
   public void draw() {
     if(upPressed){
       playerY -= playerSpd;
-      playerJoe = player[0];
+      playerSprite = player[0];
     }
     if(downPressed){
       playerY += playerSpd;
-      playerJoe = player[1];
+      playerSprite = player[1];
 
     }
     if(leftPressed){
       playerX -= playerSpd;
-      playerJoe = player[3];
+      playerSprite = player[3];
     }
     if(rightPressed){
       playerX += playerSpd;
-      playerJoe = player[2];
+      playerSprite = player[2];
     }
     if (upPressed && leftPressed) {
-      playerJoe = player[4];
+      playerSprite = player[4];
     }
     if (upPressed && rightPressed) {
-      playerJoe = player[5];
+      playerSprite = player[5];
     }
     if (downPressed && leftPressed) {
-      playerJoe = player[6];
+      playerSprite = player[6];
     }
     if (downPressed && rightPressed) {
-      playerJoe = player[7];
+      playerSprite = player[7];
     }
     translate(-playerX+400, -playerY+400);
 	  image(background1, 0, 0);
     
-    image(playerJoe, playerX, playerY);
+    image(playerSprite, playerX, playerY);
   }
 
   // Set booleans when wasd keys are pressed
