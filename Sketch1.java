@@ -1,8 +1,13 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import processing.core.PApplet;
 import processing.core.PImage;
 
 public class Sketch1 extends PApplet {
   PImage background1;
+  PImage background2;
+  PImage background3;
   PImage playerSprite;
 
   int playerX;
@@ -12,6 +17,9 @@ public class Sketch1 extends PApplet {
   boolean downPressed;
   boolean leftPressed;
   boolean rightPressed;
+  int phase = 1;
+
+  ArrayList <playerBullet> bullets = new ArrayList <playerBullet>();
 
   PImage [] player = new PImage[8];
 
@@ -28,8 +36,10 @@ public class Sketch1 extends PApplet {
    * values here i.e background, stroke, fill etc.
    */
   public void setup() {
-    background(210, 255, 173);
-    background1 = loadImage("normal_background.png");
+    frameRate(30);
+    background1 = loadImage("dark_background.png");
+    background2 = loadImage("normal_background.png");
+    background3 = loadImage("light_background.png");
     player[0] = loadImage("Gardevoir_Up.png");
     player[1] = loadImage("Gardevoir_Down.png");
     player[2] = loadImage("Gardevoir_Right.png");
@@ -47,6 +57,7 @@ public class Sketch1 extends PApplet {
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
+    // System.out.println(millis());
     if(upPressed){
       playerY -= playerSpd;
       playerSprite = player[0];
@@ -67,20 +78,44 @@ public class Sketch1 extends PApplet {
     if (upPressed && leftPressed) {
       playerSprite = player[4];
     }
-    if (upPressed && rightPressed) {
+    else if (upPressed && rightPressed) {
       playerSprite = player[5];
     }
-    if (downPressed && leftPressed) {
+    else if (downPressed && leftPressed) {
       playerSprite = player[6];
     }
-    if (downPressed && rightPressed) {
+    else if (downPressed && rightPressed) {
       playerSprite = player[7];
     }
     translate(-playerX+400, -playerY+400);
+    if(phase == 1){
 	  image(background1, 0, 0);
-    
+    }
+    if(phase == 2){
+    image(background2, 0, 0);
+    }
+    if(phase == 3){
+    image(background3, 0, 0);
+    }
     image(playerSprite, playerX, playerY);
+
+    if (frameCount%5==0 && mousePressed) {
+     playerBullet b = new playerBullet(playerX+12, playerY+14, mouseX+playerX-400, mouseY+playerY-400);
+     bullets.add(b);
+    }
+    Iterator <playerBullet> itr = bullets.iterator();
+    while(itr.hasNext()){
+      playerBullet i = itr.next();
+      i.update();
+      if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400){
+      itr.remove();
+      }
+    }
+
   }
+
+
+
 
   // Set booleans when wasd keys are pressed
   public void keyPressed() {
@@ -113,4 +148,43 @@ public class Sketch1 extends PApplet {
       rightPressed = false;
     }
   }
+
+  class playerBullet {
+  int X;
+  int Y;
+  double velX;
+  double velY;
+  double dx;
+  double dy;
+  double length;
+
+  playerBullet(int x, int y, int destx, int desty){
+  this.X = x;
+  this.Y = y;
+  dx = destx - X;
+  dy = desty - Y;
+
+  length = Math.sqrt(dx*dx + dy*dy);
+
+  dx /= length;
+  dy /= length;
+
+  velX = dx * 10;
+  velY = dy * 10;
+  }
+
+  void update(){
+    X += velX;
+    Y += velY;
+    fill(255, 160, 255);
+    strokeWeight(1);
+    stroke(75, 0, 130);
+    ellipse(X, Y, 5, 5);
+  }
+
+  
+
+  }
+
+
 }

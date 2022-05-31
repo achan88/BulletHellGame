@@ -107,7 +107,7 @@ public class Sketch2 extends PApplet {
     while(itr.hasNext()){
       playerBullet i = itr.next();
       i.update();
-      if (i.X > 1200 || i.X < 0 || i.Y > 1200 || i.Y < 0){
+      if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400){
       itr.remove();
       }
     }
