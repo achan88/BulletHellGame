@@ -38,7 +38,7 @@ public class Sketch2 extends PApplet {
   public void setup() {
     frameRate(30);
     background1 = loadImage("dark_background.png");
-    background2 = loadImage("normal_background.png");
+    background2 = loadImage("default_background.png");
     background3 = loadImage("light_background.png");
     player[0] = loadImage("Gardevoir_Up.png");
     player[1] = loadImage("Gardevoir_Down.png");
