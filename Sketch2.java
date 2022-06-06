@@ -19,7 +19,7 @@ public class Sketch2 extends PApplet {
 
   int playerRectX;
   int playerRectY;
-  int playerSpd = 10;
+  int playerSpd = 5;
 	boolean upPressed;
   boolean downPressed;
   boolean leftPressed;
@@ -28,6 +28,7 @@ public class Sketch2 extends PApplet {
   
 
   ArrayList <playerBullet> bullets = new ArrayList <playerBullet>();
+  ArrayList <rectBullet> rectBullets = new ArrayList <rectBullet>();
 
   PImage [] player = new PImage[8];
 
@@ -70,20 +71,21 @@ public class Sketch2 extends PApplet {
   public void draw() {
 
     if (bossAlive) {
-      if(upPressed && playerRectY > 372){
+
+      if(upPressed){
         playerRectY -= playerSpd;
         playerSprite = player[0];
       }
-      if(downPressed && playerRectY < 1572){
+      if(downPressed){
         playerRectY += playerSpd;
         playerSprite = player[1];
   
       }
-      if(leftPressed && playerRectX > 400){
+      if(leftPressed){
         playerRectX -= playerSpd;
         playerSprite = player[3];
       }
-      if(rightPressed && playerRectX < 1577){
+      if(rightPressed){
         playerRectX += playerSpd;
         playerSprite = player[2];
       }
@@ -123,17 +125,29 @@ public class Sketch2 extends PApplet {
        playerBullet b = new playerBullet(playerRectX+12, playerRectY+14, mouseX+playerRectX-400, mouseY+playerRectY-400);
        bullets.add(b);
       }
-      Iterator <playerBullet> itr = bullets.iterator();
-      while(itr.hasNext()){
-        playerBullet i = itr.next();
+      Iterator <playerBullet> playerItr = bullets.iterator();
+      while(playerItr.hasNext()){
+        playerBullet i = playerItr.next();
         i.update();
         if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400){
-        itr.remove();
+        playerItr.remove();
         }
-        boolean collide = circleRect(i.X, i.Y, 4f, bossX, bossY, 80,  80);
+        boolean collide = circleRect(i.X, i.Y, 2.5f, bossX, bossY, 84,  100);
         if (collide) {
           bossHealth -= 5;
-          itr.remove();
+          playerItr.remove();
+        }
+      }
+      if (frameCount%30==0) {
+        rectBullet b = new rectBullet(bossX, bossY, 0, 10, 80, 5, 60, 1, 0);
+        rectBullets.add(b);
+       }
+      Iterator <rectBullet> rectItr = rectBullets.iterator();
+      while(rectItr.hasNext()){
+        rectBullet i = rectItr.next();
+        i.update();
+        if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400 || i.time == i.duration || i.width < 0 || i.height < 0){
+        rectItr.remove();
         }
       }
 
@@ -145,7 +159,6 @@ public class Sketch2 extends PApplet {
       rect(400, 50, bossHealth/2, 10);
       fill(255);
       text(bossHealth, 600, 60);
-    
     }
     // System.out.println(millis());
 
@@ -233,8 +246,8 @@ public class Sketch2 extends PApplet {
   dx /= length;
   dy /= length;
 
-  velX = dx * 20;
-  velY = dy * 20;
+  velX = dx * 10;
+  velY = dy * 10;
   }
 
   void update(){
@@ -243,12 +256,47 @@ public class Sketch2 extends PApplet {
     fill(255, 160, 255);
     strokeWeight(1);
     stroke(75, 0, 130);
-    ellipse(X, Y, 8, 8);
+    ellipse(X, Y, 5, 5);
+  } 
+
   }
 
+  class rectBullet {
+    int X;
+    int Y;
+    double velX;
+    double velY;
+    double duration;
+    double time;
+    double width;
+    double height;
+    double shrinkX;
+    double shrinkY;
   
-
-  }
-
+    rectBullet(int x, int y, double velX, double velY, double width, double height, int duration, double shrinkX, double shrinkY){
+    this.X = x;
+    this.Y = y;
+    this.velX = velX;
+    this.velY = velY;
+    this.width = width;
+    this.height = height;
+    this.duration = duration;
+    this.shrinkX = shrinkX;
+    this.shrinkY = shrinkY;
+    time = 0;
+    }
+  
+    void update(){
+      time++;
+      X += velX;
+      Y += velY;
+      width -= shrinkX;
+      height -= shrinkY;
+      fill(200, 100, 100);
+      strokeWeight(1);
+      stroke(0);
+      rect (X, Y, (float) width, (float) height);
+    }  
+    }
 
 }
