@@ -17,9 +17,9 @@ public class Sketch1 extends PApplet {
   boolean bossAlive = true;
   int bossHealth = 500;
 
-  int playerectangleX;
-  int playerectangleY;
-  int playerSpd = 5;
+  int playerX;
+  int playerY;
+  int playerSpd = 10;
 	boolean upPressed;
   boolean downPressed;
   boolean leftPressed;
@@ -59,8 +59,8 @@ public class Sketch1 extends PApplet {
     player[5] = loadImage("Gardevoir_Up_Right.png");
     player[6] = loadImage("Gardevoir_Down_Left.png");
     player[7] = loadImage("Gardevoir_Down_Right.png");
-    playerectangleX = 400;
-    playerectangleY = 400;
+    playerX = 400;
+    playerY = 400;
     playerSprite = player[1];
   }
 
@@ -68,86 +68,94 @@ public class Sketch1 extends PApplet {
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
+    
+    if(upPressed && playerY > 372){
+      playerY -= playerSpd;
+      playerSprite = player[0];
+    }
+    if(downPressed && playerY < 1572){
+      playerY += playerSpd;
+      playerSprite = player[1];
+    }
+    if(leftPressed && playerX > 400){
+      playerX -= playerSpd;
+      playerSprite = player[3];
+    }
+    if(rightPressed && playerX < 1577){
+      playerX += playerSpd;
+      playerSprite = player[2];
+    }
+    if (upPressed && leftPressed) {
+      playerSprite = player[4];
+    }
+    else if (upPressed && rightPressed) {
+      playerSprite = player[5];
+    }
+    else if (downPressed && leftPressed) {
+      playerSprite = player[6];
+    }
+    else if (downPressed && rightPressed) {
+      playerSprite = player[7];
+     }
+  
+    translate(-playerX+400, -playerY+400);
+  
+    if(phase == 1){
+      image(background1, 0, 0);
+    }
+    if(phase == 2){
+      image(background2, 0, 0);
+    }
+     if(phase == 3){
+      image(background3, 0, 0);
+    }
+    image(playerSprite, playerX, playerY);
+  
+    if (frameCount%5==0 && mousePressed) {
+      playerBullet b = new playerBullet(playerX+12, playerY+14, mouseX+playerX-400, mouseY+playerY-400);
+     bullets.add(b);
+    }
+     Iterator <playerBullet> itr = bullets.iterator();
+    while(itr.hasNext()) {
+      playerBullet i = itr.next();
+      i.update();
+      if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400){
+        itr.remove();
+      }
+      boolean collide = circleRect(i.X, i.Y, 4f, bossX, bossY, 80,  80);
+      if (collide) {
+        bossHealth -= 5;
+        itr.remove();
+      }
+    }
 
     if (bossAlive) {
-
-      if(upPressed){
-        playerectangleY -= playerSpd;
-        playerSprite = player[0];
-      }
-      if(downPressed){
-        playerectangleY += playerSpd;
-        playerSprite = player[1];
-  
-      }
-      if(leftPressed){
-        playerectangleX -= playerSpd;
-        playerSprite = player[3];
-      }
-      if(rightPressed){
-        playerectangleX += playerSpd;
-        playerSprite = player[2];
-      }
-      if (upPressed && leftPressed) {
-        playerSprite = player[4];
-      }
-      else if (upPressed && rightPressed) {
-        playerSprite = player[5];
-      }
-      else if (downPressed && leftPressed) {
-        playerSprite = player[6];
-      }
-      else if (downPressed && rightPressed) {
-        playerSprite = player[7];
-      }
-  
-      translate(-playerectangleX+400, -playerectangleY+400);
-  
-      if(phase == 1){
-      image(background1, 0, 0);
-      }
-      if(phase == 2){
-      image(background2, 0, 0);
-      }
-      if(phase == 3){
-      image(background3, 0, 0);
-      }
-      image(playerSprite, playerectangleX, playerectangleY);
-  
       image(bossSprite, bossX, bossY);
       bossX += bossSpd;
       if (bossX <= 500 || bossX >= 1416) {
         bossSpd = -bossSpd;
       }
-  
-      if (frameCount%5==0 && mousePressed) {
-       playerBullet b = new playerBullet(playerectangleX+12, playerectangleY+14, mouseX+playerectangleX-400, mouseY+playerectangleY-400);
-       bullets.add(b);
-      }
-      Iterator <playerBullet> itr = bullets.iterator();
-      while(itr.hasNext()){
-        playerBullet i = itr.next();
-        i.update();
-        if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400){
-        itr.remove();
-        }
-        boolean collide = circleRect(i.X, i.Y, 2.5f, bossX, bossY, 84,  100);
-        if (collide) {
-          bossHealth -= 5;
-          itr.remove();
-        }
-      }
-
-      for (int i = 0; i < bossHealth; i++) {
-        rect(1000, 450, bossHealth, 50);
-      }
     }
+
+    if (bossHealth >= 0) {
+      translate(playerX-400, playerY-400);
+      fill(50);
+      rect(400, 50, 250, 10);
+      fill(255, 0, 0);
+      stroke(0);
+      rect(400, 50, bossHealth/2, 10);
+      fill(255);
+      text(bossHealth, 600, 60);
+      } 
+
+    if (bossHealth <= 0) {
+      bossAlive = false;
+    }
+    
+    
     // System.out.println(millis());
 
   }
-
-
-
 
   // Set booleans when wasd keys are pressed
   public void keyPressed() {
@@ -181,6 +189,7 @@ public class Sketch1 extends PApplet {
     }
   }
 
+  // calculates collision between circle and rectangle
   public boolean circleRect(float circleX, float circleY, float radius, float rectangleX, float rectangleY, float rectangleWidth, float rectangleHeight) {
     float tempX = circleX;
     float tempY = circleY;
@@ -228,8 +237,8 @@ public class Sketch1 extends PApplet {
   dx /= length;
   dy /= length;
 
-  velX = dx * 10;
-  velY = dy * 10;
+  velX = dx * 20;
+  velY = dy * 20;
   }
 
   void update(){
@@ -238,7 +247,7 @@ public class Sketch1 extends PApplet {
     fill(255, 160, 255);
     strokeWeight(1);
     stroke(75, 0, 130);
-    ellipse(X, Y, 5, 5);
+    ellipse(X, Y, 8, 8);
   }
 
   
