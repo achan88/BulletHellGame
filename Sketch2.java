@@ -172,16 +172,16 @@ public class Sketch2 extends PApplet {
     }
 
     // normal bullets
-    // if (frameCount%5 == 0) {
-    //   normalBullet b = new normalBullet(bossX, bossY, playerX, playerY, false, 8);
-    //   normalBullet.add(b);
-    // }
+    if (frameCount%5 == 0) {
+      normalBullet b = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), false, 8);
+      normalBullet.add(b);
+    }
 
     Iterator <normalBullet> normalItr = normalBullet.iterator();
     while(normalItr.hasNext()) {
       normalBullet i = normalItr.next();
       i.update();
-      if (circleRect(i.X, i.Y, i.size, playerX-12, playerY-14, 23,  28)) {
+      if (circleRect((int) i.X, (int) i.Y, i.size, playerX-12, playerY-14, 23,  28)) {
         playerHealth -= 5;
         normalItr.remove();
         combatTimer = 90;
@@ -242,9 +242,6 @@ public class Sketch2 extends PApplet {
     if (bossHealth <= 0) {
       bossAlive = false;
     }
-    
-    
-    // System.out.println(millis());
 
   }
 
@@ -278,6 +275,12 @@ public class Sketch2 extends PApplet {
     else if (key == 'd') {
       rightPressed = false;
     }
+  }
+
+  // calculates the angle between 2 points in degrees
+  public double getAngle(int x1, int y1, int x2, int y2){
+    double angle = atan2(y2 - y1, x2 - x1) * 180 / PI;
+    return angle;
   }
 
   // calculates collision between circle and rectangle
@@ -350,32 +353,21 @@ public class Sketch2 extends PApplet {
   }
 
   class normalBullet {
-    int X;
-    int Y;
+    double X;
+    double Y;
     double velX;
     double velY;
-    double dx;
-    double dy;
-    double length;
     boolean isGold;
     int size; 
   
-    normalBullet(int x, int y, int destx, int desty, boolean isGold, int size) {
+    normalBullet(int x, int y, double angle, boolean isGold, int size) {
       this.X = x;
       this.Y = y;
-      dx = destx - X;
-      dy = desty - Y;
-
       this.isGold = isGold;
       this.size = size;
-
-      length = Math.sqrt(dx*dx + dy*dy);
   
-      dx /= length;
-      dy /= length;
-  
-      velX = dx * 20;
-      velY = dy * 20;
+      velX = Math.cos(angle*Math.PI/180) * 20;
+      velY = Math.sin(angle*Math.PI/180) * 20;
     }
   
     void update() {
@@ -389,7 +381,7 @@ public class Sketch2 extends PApplet {
       }
       strokeWeight(1);
       stroke(0);
-      ellipse(X, Y, size, size);
+      ellipse((int)X, (int)Y, size, size);
     }
 
   }
