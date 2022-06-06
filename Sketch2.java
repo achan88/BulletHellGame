@@ -36,6 +36,7 @@ public class Sketch2 extends PApplet {
   ArrayList <playerBullet> playerBullets = new ArrayList <playerBullet>();
   ArrayList <normalBullet> normalBullets = new ArrayList <normalBullet>();
   ArrayList <rectBullet> rectBullets = new ArrayList <rectBullet>();
+  ArrayList <bomb> bombs = new ArrayList <bomb>();
 
   PImage [] player = new PImage[8];
 
@@ -153,10 +154,12 @@ public class Sketch2 extends PApplet {
     }
 
     // rectangle bullets
+    // test
     if (frameCount%30==0) {
       rectBullet b = new rectBullet(bossX, bossY, 0, 10, 80, 5, 60, 1, 0, 20);
       rectBullets.add(b);
      }
+    // rectangle bullet code (keep)
     Iterator <rectBullet> rectItr = rectBullets.iterator();
     while(rectItr.hasNext()){
       rectBullet i = rectItr.next();
@@ -172,6 +175,7 @@ public class Sketch2 extends PApplet {
     }
 
     // normal bullets
+    // test
     if (frameCount%5 == 0) {
       if(frameCount%30 == 0){
       for(int i=0; i<18; i++){
@@ -181,7 +185,7 @@ public class Sketch2 extends PApplet {
       normalBullet b = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), 15, 10, 300,  true, false);
       normalBullets.add(b);
     }
-
+    // normal bullet code (keep)
     Iterator <normalBullet> normalItr = normalBullets.iterator();
     while(normalItr.hasNext()) {
       normalBullet i = normalItr.next();
@@ -196,7 +200,25 @@ public class Sketch2 extends PApplet {
       }
     }
 
-
+    //bomb test
+    if(frameCount % 60 == 0){
+      bomb b = new bomb(bossX, bossY, playerX, playerY, 90);
+      bombs.add(b);
+    }
+    //bomb code
+    Iterator <bomb> bombItr = bombs.iterator();
+    while(bombItr.hasNext()) {
+      bomb i = bombItr.next();
+      i.update();
+      if (i.fuse == 0){
+        for(int j = 0; j < 8; j++){
+          normalBullet b = new normalBullet((int) i.X, (int) i.Y, j * 45, 10, 20, 5, false, false);
+          normalBullets.add(b);
+        }
+        bombItr.remove();
+      }
+      }
+    
 
     /**
      * 
@@ -225,12 +247,13 @@ public class Sketch2 extends PApplet {
       }
     }
 
+    strokeWeight(1);
     translate(playerX-400, playerY-400);
     if (bossHealth >= 1) {
+      stroke(0);
       fill(50);
       rect(400, 50, 250, 10);
       fill(255, 0, 0);
-      stroke(0);
       rect(400, 50, bossHealth/2, 10);
       fill(255);
       text(bossHealth, 600, 60);
@@ -447,4 +470,62 @@ public class Sketch2 extends PApplet {
     }
   }
 
+
+  class bomb {
+    double X;
+    double Y;
+    double velX;
+    double velY;
+    double dx;
+    double dy;
+    int destx;
+    int desty;
+    double length;
+    int fuse;
+  
+    bomb(int x, int y, int destx, int desty, int fuse) {
+      this.X = x;
+      this.Y = y;
+      dx = destx - X;
+      dy = desty - Y;
+      this.destx = destx;
+      this.desty = desty;
+
+      this.fuse = fuse;
+
+      length = Math.sqrt(dx*dx + dy*dy);
+  
+      dx /= length;
+      dy /= length;
+  
+      velX = dx * 20;
+      velY = dy * 20;
+    }
+
+    void update() {
+      if(X < destx + 10 && X > destx - 10 && Y < desty + 10 && Y > desty - 10){
+        velX = 0;
+        velY = 0;
+        X = destx;
+        Y = desty;
+      }
+      X += velX;
+      Y += velY;
+      fuse--;
+      fill(20);
+      strokeWeight(3);
+      if(fuse >= 60){
+      stroke(255, 255, 0);
+      }
+      else if(fuse >= 30){
+        stroke(255, 120, 10);
+      }
+      else{
+        stroke(200, 0, 0);
+      }
+      ellipse((int)X, (int)Y, 20, 20);
+    }
+  }
+
+  
 }
