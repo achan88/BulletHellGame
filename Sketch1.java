@@ -192,7 +192,7 @@ public class Sketch1 extends PApplet {
     while(normalItr.hasNext()) {
       normalBullet i = normalItr.next();
       i.update();
-      if (circleRect((int) i.X, (int) i.Y, i.size, playerX-12, playerY-14, 23,  28)) {
+      if (circleRect((int) i.X, (int) i.Y, (i.size)/2, playerX-12, playerY-14, 23,  28)) {
         playerHealth -= 5;
         normalItr.remove();
         combatTimer = 90;
@@ -236,7 +236,7 @@ public class Sketch1 extends PApplet {
       beam i = beamItr.next();
       i.update();
       if(i.time > 60){
-        if(circleRect(i.X, i.Y, i.size, playerX-12, playerY-14, 23, 28)&& i.hasHit == false){
+        if(circleRect(i.X, i.Y, (i.size)/2, playerX-12, playerY-14, 23, 28)&& i.hasHit == false){
           playerHealth -= 30;
           combatTimer = 90;
           i.hasHit = true;
