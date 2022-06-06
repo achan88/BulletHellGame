@@ -148,7 +148,7 @@ public class Sketch1 extends PApplet {
 
     // boss bullets
     if (frameCount%1 == 0) {
-      normalBullet b = new normalBullet(bossX+42, bossY+100, playerX-30, playerY, false, 8);
+      normalBullet b = new normalBullet(bossX+42, bossY+100, playerX+12, playerY+14, false, 8);
       bossBullet.add(b);
     }
     Iterator <normalBullet> bossItr = bossBullet.iterator();
