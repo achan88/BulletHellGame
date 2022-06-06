@@ -34,7 +34,7 @@ public class Sketch2 extends PApplet {
   
 
   ArrayList <playerBullet> playerBullets = new ArrayList <playerBullet>();
-  ArrayList <normalBullet> normalBullet = new ArrayList <normalBullet>();
+  ArrayList <normalBullet> normalBullets = new ArrayList <normalBullet>();
   ArrayList <rectBullet> rectBullets = new ArrayList <rectBullet>();
 
   PImage [] player = new PImage[8];
@@ -173,11 +173,16 @@ public class Sketch2 extends PApplet {
 
     // normal bullets
     if (frameCount%5 == 0) {
-      normalBullet b = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), false, 8);
-      normalBullet.add(b);
+      if(frameCount%30 == 0){
+      for(int i=0; i<18; i++){
+        normalBullet b = new normalBullet(bossX, bossY, i * 20, 8, 10, 30, false, true);
+        normalBullets.add(b);
+      }}
+      normalBullet b = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), 15, 10, 300,  true, false);
+      normalBullets.add(b);
     }
 
-    Iterator <normalBullet> normalItr = normalBullet.iterator();
+    Iterator <normalBullet> normalItr = normalBullets.iterator();
     while(normalItr.hasNext()) {
       normalBullet i = normalItr.next();
       i.update();
@@ -186,7 +191,7 @@ public class Sketch2 extends PApplet {
         normalItr.remove();
         combatTimer = 90;
       }
-      else if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400){
+      else if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400 || (i.time == i.duration && !i.isBounce)){
         normalItr.remove();
       }
     }
@@ -358,25 +363,42 @@ public class Sketch2 extends PApplet {
     double velX;
     double velY;
     boolean isGold;
+    boolean isBounce;
+    int duration;
     int size; 
+    int time;
   
-    normalBullet(int x, int y, double angle, boolean isGold, int size) {
+    normalBullet(int x, int y, double angle, int size, int speed, int duration, boolean isGold, boolean isBounce) {
       this.X = x;
       this.Y = y;
       this.isGold = isGold;
+      this.isBounce = isBounce;
       this.size = size;
+      this.duration = duration;
   
-      velX = Math.cos(angle*Math.PI/180) * 20;
-      velY = Math.sin(angle*Math.PI/180) * 20;
+      velX = Math.cos(angle*Math.PI/180) * speed;
+      velY = Math.sin(angle*Math.PI/180) * speed;
+
+      this.time = 0;
     }
   
     void update() {
       X += velX;
       Y += velY;
+      time++;
       if (isGold) {
-        fill(243, 236, 214);
+        fill(255, 210, 100);
       }
-      else {
+      else if (isBounce){
+        if(time == duration){
+          velX = -velX;
+          velY = -velY;
+          time = 0;
+          isBounce = false;
+        }
+        fill(255, 165, 0);
+      }
+      else{
         fill(bulletRed);
       }
       strokeWeight(1);
