@@ -27,7 +27,9 @@ public class Sketch1 extends PApplet {
   int phase = 1;
   
 
-  ArrayList <playerBullet> bullets = new ArrayList <playerBullet>();
+  ArrayList <playerBullet> playerbullets = new ArrayList <playerBullet>();
+  ArrayList <normalBullet> bossBullet = new ArrayList <normalBullet>();
+  ArrayList <rectBullet> rectBullets = new ArrayList <rectBullet>();
 
   PImage [] player = new PImage[8];
 
@@ -111,11 +113,12 @@ public class Sketch1 extends PApplet {
     }
     image(playerSprite, playerX, playerY);
   
+    // player bullets
     if (frameCount%5==0 && mousePressed) {
       playerBullet b = new playerBullet(playerX+12, playerY+14, mouseX+playerX-400, mouseY+playerY-400);
-     bullets.add(b);
+      playerbullets.add(b);
     }
-     Iterator <playerBullet> itr = bullets.iterator();
+     Iterator <playerBullet> itr = playerbullets.iterator();
     while(itr.hasNext()) {
       playerBullet i = itr.next();
       i.update();
@@ -129,6 +132,34 @@ public class Sketch1 extends PApplet {
       }
     }
 
+    // rectangle
+    if (frameCount%30==0) {
+      rectBullet b = new rectBullet(bossX, bossY, 0, 10, 80, 5, 60, 1, 0);
+      rectBullets.add(b);
+     }
+    Iterator <rectBullet> rectItr = rectBullets.iterator();
+    while(rectItr.hasNext()){
+      rectBullet i = rectItr.next();
+      i.update();
+      if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400 || i.time == i.duration || i.width < 0 || i.height < 0){
+      rectItr.remove();
+      }
+    }
+
+    // boss bullets
+    if (frameCount%1 == 0) {
+      normalBullet b = new normalBullet(bossX+42, bossY+100, playerX-30, playerY, false, 8);
+      bossBullet.add(b);
+    }
+    Iterator <normalBullet> bossItr = bossBullet.iterator();
+    while(bossItr.hasNext()) {
+      normalBullet i = bossItr.next();
+      i.update();
+      if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400){
+        bossItr.remove();
+      }
+    }
+
     if (bossAlive) {
       image(bossSprite, bossX, bossY);
       bossX += bossSpd;
@@ -137,7 +168,7 @@ public class Sketch1 extends PApplet {
       }
     }
 
-    if (bossHealth >= 0) {
+    if (bossHealth >= 1) {
       translate(playerX-400, playerY-400);
       fill(50);
       rect(400, 50, 250, 10);
@@ -251,8 +282,91 @@ public class Sketch1 extends PApplet {
   }
 
   
-
   }
 
+  class normalBullet {
+    int X;
+    int Y;
+    double velX;
+    double velY;
+    double dx;
+    double dy;
+    double length;
+    boolean isGold;
+    int size; 
+  
+    normalBullet(int x, int y, int destx, int desty, boolean isGold, int size) {
+      this.X = x;
+      this.Y = y;
+      dx = destx - X;
+      dy = desty - Y;
+
+      this.isGold = isGold;
+      this.size = size;
+
+      length = Math.sqrt(dx*dx + dy*dy);
+  
+      dx /= length;
+      dy /= length;
+  
+      velX = dx * 20;
+      velY = dy * 20;
+    }
+  
+    void update() {
+      X += velX;
+      Y += velY;
+
+      if (isGold) {
+        fill(243, 236, 214);
+      }
+    
+      else {
+        fill(178, 0, 0);
+      }
+
+      strokeWeight(1);
+      stroke(0);
+      ellipse(X, Y, size, size);
+    }
+
+  }
+  class rectBullet {
+    int X;
+    int Y;
+    double velX;
+    double velY;
+    double duration;
+    double time;
+    double width;
+    double height;
+    double shrinkX;
+    double shrinkY;
+
+    rectBullet(int x, int y, double velX, double velY, double width, double height, int duration, double shrinkX, double shrinkY){
+    this.X = x;
+    this.Y = y;
+    this.velX = velX;
+    this.velY = velY;
+    this.width = width;
+    this.height = height;
+    this.duration = duration;
+    this.shrinkX = shrinkX;
+    this.shrinkY = shrinkY;
+    time = 0;
+    }
+
+    void update(){
+      time++;
+      X += velX;
+      Y += velY;
+      width -= shrinkX;
+      height -= shrinkY;
+      fill(200, 100, 100);
+      strokeWeight(1);
+      stroke(0);
+      rect (X, Y, (float) width, (float) height);
+    }
+  }
 
 }
