@@ -329,8 +329,7 @@ public class Sketch2 extends PApplet {
      
          if(attack == 0){
            if(phase == 1){
-              // attack = (int)random(1, 3);
-              attack = 2;
+              attack = (int)random(1, 3);
               attackTimer = 3000;
            }
            if(phase == 2){
