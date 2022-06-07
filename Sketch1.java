@@ -12,6 +12,7 @@ public class Sketch1 extends PApplet {
   PImage background3;
   PImage playerSprite;
   PImage bossSprite;
+  PImage menu;
  
   int bossX = 500;
   int bossY = 500;
@@ -19,6 +20,7 @@ public class Sketch1 extends PApplet {
   boolean bossAlive = true;
   int bossHealth = 500;
   int phase = 1;
+  boolean startGame = false;
  
   int playerX;
   int playerY;
@@ -40,6 +42,7 @@ public class Sketch1 extends PApplet {
   ArrayList <beam> beams = new ArrayList <beam>();
  
   PImage [] player = new PImage[8];
+  PImage [] menuScreen = new PImage[4];
  
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -60,6 +63,11 @@ public class Sketch1 extends PApplet {
     background3 = loadImage("light_background.png");
  
     bossSprite = loadImage("silver_default.png");
+
+    menuScreen[0] = loadImage("start_menu.png");
+    menuScreen[1] = loadImage("start_highlight.png");
+    menuScreen[2] = loadImage("help_highlight.png");
+    menuScreen[3] = loadImage("credits_highlight.png");
  
     player[0] = loadImage("Gardevoir_Up.png");
     player[1] = loadImage("Gardevoir_Down.png");
@@ -72,6 +80,7 @@ public class Sketch1 extends PApplet {
     playerX = 800;
     playerY = 800;
     playerSprite = player[1];
+    
   }
  
   /**
@@ -79,223 +88,258 @@ public class Sketch1 extends PApplet {
    */
   public void draw() {
  
-    if(combatTimer>0){
-    combatTimer--;
-    }
-    if(combatTimer == 0 && playerHealth < 1000 && frameCount % 2 == 0){
-      playerHealth++;
-    }
-    if(upPressed && playerY > 400){
-      playerY -= playerSpd;
-      playerSprite = player[0];
-    }
-    if(downPressed && playerY < 1586){
-      playerY += playerSpd;
-      playerSprite = player[1];
-    }
-    if(leftPressed && playerX > 412){
-      playerX -= playerSpd;
-      playerSprite = player[3];
-    }
-    if(rightPressed && playerX < 1588){
-      playerX += playerSpd;
-      playerSprite = player[2];
-    }
-    if (upPressed && leftPressed) {
-      playerSprite = player[4];
-    }
-    else if (upPressed && rightPressed) {
-      playerSprite = player[5];
-    }
-    else if (downPressed && leftPressed) {
-      playerSprite = player[6];
-    }
-    else if (downPressed && rightPressed) {
-      playerSprite = player[7];
-     }
- 
-    translate(-playerX+400, -playerY+400);
- 
-    if(phase == 1){
-      image(background1, 0, 0);
-    }
-    if(phase == 2){
-      image(background2, 0, 0);
-    }
-     if(phase == 3){
-      image(background3, 0, 0);
-    }
-    image(playerSprite, playerX-12, playerY-14);
- 
- 
- 
-    /**
-     * 
-     * LOAD BULLETS
-     * 
-     */
- 
-    // player bullets
-    if (frameCount%5==0 && mousePressed) {
-      playerBullet b = new playerBullet(playerX, playerY, mouseX+playerX-400, mouseY+playerY-400);
-      playerBullets.add(b);
-    }
-     Iterator <playerBullet> playerItr = playerBullets.iterator();
-    while(playerItr.hasNext()) {
-      playerBullet i = playerItr.next();
-      i.update();
-      boolean collide = circleRect(i.X, i.Y, 4f, bossX-42, bossY-50, 80,  80);
-      if (collide) {
-        bossHealth -= 5;
-        playerItr.remove();
-      }
-      else if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400){
-        playerItr.remove();
-      }
-    }
- 
-    // rectangle bullets
-    // test
-    if (frameCount%30==0) {
-      rectBullet b = new rectBullet(bossX, bossY, 0, 10, 80, 5, 60, 1, 0, 20);
-      rectBullets.add(b);
-     }
-    // rectangle bullet code (keep)
-    Iterator <rectBullet> rectItr = rectBullets.iterator();
-    while(rectItr.hasNext()){
-      rectBullet i = rectItr.next();
-      i.update();
-      if(rectRect(i.X, i.Y, (float) i.width, (float) i.height, playerX-12, playerY-14, 23, 28)){
-        playerHealth -= i.damage ;
-        rectItr.remove();
-        combatTimer = 90;
-      }
-      else if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400 || i.time == i.duration || i.width < 0 || i.height < 0){
-      rectItr.remove();
-      }
-    }
- 
-    // normal bullets
-    // test
-    if (frameCount%5 == 0) {
-      if(frameCount%30 == 0){
-        for(int i=0; i<18; i++){
-          normalBullet b = new normalBullet(bossX, bossY, i * 20, 8, 10, 30, false, true);
-          normalBullets.add(b);
+    if (startGame == false) {
+
+      if (mouseX >= 305 && mouseX <= 493 && mouseY >= 207 && mouseY <= 276) {
+        image(menuScreen[1], 0, 0);
+        if(mousePressed) {
+          startGame = true;
         }
       }
-      normalBullet b = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), 15, 10, 300,  true, false);
-      normalBullets.add(b);
-    }
-    // normal bullet code (keep)
-    Iterator <normalBullet> normalItr = normalBullets.iterator();
-    while(normalItr.hasNext()) {
-      normalBullet i = normalItr.next();
-      i.update();
-      if (circleRect((int) i.X, (int) i.Y, (i.size)/2, playerX-12, playerY-14, 23,  28)) {
-        playerHealth -= 5;
-        normalItr.remove();
-        combatTimer = 90;
+
+      else if(mouseX >= 205 && mouseX <= 593 && mouseY >= 322 & mouseY <= 389) {
+        image(menuScreen[2], 0, 0);
       }
-      else if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400 || (i.time == i.duration && !i.isBounce)){
-        normalItr.remove();
+
+
+      else if(mouseX >= 286 && mouseX <= 514 && mouseY >= 434 && mouseY <= 502) {
+        image(menuScreen[3], 0, 0);
       }
-    }
- 
-    //bomb test
-    if(frameCount % 60 == 0){
-      bomb b = new bomb(bossX, bossY, playerX, playerY, 90);
-      bombs.add(b);
-    }
-    //bomb code
-    Iterator <bomb> bombItr = bombs.iterator();
-    while(bombItr.hasNext()) {
-      bomb i = bombItr.next();
-      i.update();
-      if (i.fuse == 0){
-        for(int j = 0; j < 8; j++){
-          normalBullet b = new normalBullet((int) i.X, (int) i.Y, j * 45, 10, 20,   5, false, false);
-          normalBullets.add(b);
-        }
-        bombItr.remove();
+
+      else {
+        image(menuScreen[0], 0 ,0);
       }
-      }
- 
-    //beam test
-    if(frameCount %10 == 0){
-      beam b = new beam((int) random(400, 1600), (int) random(400, 1600), 50);
-      beams.add(b);
-    }
-    if(frameCount %1 == 0){
-      beam b = new beam(800, 800, 50);
-      beams.add(b);
-    }
-    //beam code 
-    Iterator <beam> beamItr = beams.iterator();
-    while(beamItr.hasNext()) {
-      beam i = beamItr.next();
-      i.update();
-      if(i.time > 60){
-        if(circleRect(i.X, i.Y, (i.size)/2, playerX-12, playerY-14, 23, 28)&& i.hasHit == false){
-          playerHealth -= 30;
-          combatTimer = 90;
-          i.hasHit = true;
-        }
-      }
-      if(i.time > 75){
-        beamItr.remove();
-      }
-    }
- 
-    /**
-     * 
-     * BOSS ATTACKS
-     * 
-     */
- 
- 
- 
- 
- 
- 
- 
- 
- 
-     /**
-      * 
-      * DRAW MAJOR SPRITES AND GRAPHICS 
-      *
+      /* 
+      first hit box
+      rect(305, 207, 188, 69);
+
+      second hit box
+      rect(205, 322, 388,67);
+
+      third hit box
+      rect(286, 434, 228,68);
       */
-    if (bossAlive) {
-      image(bossSprite, bossX-42, bossY-50);
-      bossX += bossSpd;
-      if (bossX <= 500 || bossX >= 1416) {
-        bossSpd = -bossSpd;
-      }
+
     }
- 
-    strokeWeight(1);
-    translate(playerX-400, playerY-400);
-    if (bossHealth >= 1) {
-      stroke(0);
-      fill(50);
-      rect(400, 50, 250, 10);
-      fill(255, 0, 0);
-      rect(400, 50, bossHealth/2, 10);
-      fill(255);
-      text(bossHealth, 600, 60);
-      } 
- 
-      fill (50);
-      rect(20, 700, 100, 5);
-      fill(0, 255, 0);
-      stroke(0);
-      rect(20, 700, playerHealth/10, 10);
-      fill(255);
-      text(playerHealth, 80, 700);
- 
-    if (bossHealth <= 0) {
-      bossAlive = false;
+    if (startGame) {
+      if(combatTimer>0){
+        combatTimer--;
+        }
+        if(combatTimer == 0 && playerHealth < 1000 && frameCount % 2 == 0){
+          playerHealth++;
+        }
+        if(upPressed && playerY > 400){
+          playerY -= playerSpd;
+          playerSprite = player[0];
+        }
+        if(downPressed && playerY < 1586){
+          playerY += playerSpd;
+          playerSprite = player[1];
+        }
+        if(leftPressed && playerX > 412){
+          playerX -= playerSpd;
+          playerSprite = player[3];
+        }
+        if(rightPressed && playerX < 1588){
+          playerX += playerSpd;
+          playerSprite = player[2];
+        }
+        if (upPressed && leftPressed) {
+          playerSprite = player[4];
+        }
+        else if (upPressed && rightPressed) {
+          playerSprite = player[5];
+        }
+        else if (downPressed && leftPressed) {
+          playerSprite = player[6];
+        }
+        else if (downPressed && rightPressed) {
+          playerSprite = player[7];
+         }
+     
+        translate(-playerX+400, -playerY+400);
+     
+        if(phase == 1){
+          image(background1, 0, 0);
+        }
+        if(phase == 2){
+          image(background2, 0, 0);
+        }
+         if(phase == 3){
+          image(background3, 0, 0);
+        }
+        image(playerSprite, playerX-12, playerY-14);
+     
+     
+     
+        /**
+         * 
+         * LOAD BULLETS
+         * 
+         */
+     
+        // player bullets
+        if (frameCount%5==0 && mousePressed) {
+          playerBullet b = new playerBullet(playerX, playerY, mouseX+playerX-400, mouseY+playerY-400);
+          playerBullets.add(b);
+        }
+         Iterator <playerBullet> playerItr = playerBullets.iterator();
+        while(playerItr.hasNext()) {
+          playerBullet i = playerItr.next();
+          i.update();
+          boolean collide = circleRect(i.X, i.Y, 4f, bossX-42, bossY-50, 80,  80);
+          if (collide) {
+            bossHealth -= 5;
+            playerItr.remove();
+          }
+          else if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400){
+            playerItr.remove();
+          }
+        }
+     
+        // rectangle bullets
+        // test
+        if (frameCount%30==0) {
+          rectBullet b = new rectBullet(bossX, bossY, 0, 10, 80, 5, 60, 1, 0, 20);
+          rectBullets.add(b);
+         }
+        // rectangle bullet code (keep)
+        Iterator <rectBullet> rectItr = rectBullets.iterator();
+        while(rectItr.hasNext()){
+          rectBullet i = rectItr.next();
+          i.update();
+          if(rectRect(i.X, i.Y, (float) i.width, (float) i.height, playerX-12, playerY-14, 23, 28)){
+            playerHealth -= i.damage ;
+            rectItr.remove();
+            combatTimer = 90;
+          }
+          else if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400 || i.time == i.duration || i.width < 0 || i.height < 0){
+          rectItr.remove();
+          }
+        }
+     
+        // normal bullets
+        // test
+        if (frameCount%5 == 0) {
+          if(frameCount%30 == 0){
+            for(int i=0; i<18; i++){
+              normalBullet b = new normalBullet(bossX, bossY, i * 20, 8, 10, 30, false, true);
+              normalBullets.add(b);
+            }
+          }
+          normalBullet b = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), 15, 10, 300,  true, false);
+          normalBullets.add(b);
+        }
+        // normal bullet code (keep)
+        Iterator <normalBullet> normalItr = normalBullets.iterator();
+        while(normalItr.hasNext()) {
+          normalBullet i = normalItr.next();
+          i.update();
+          if (circleRect((int) i.X, (int) i.Y, (i.size)/2, playerX-12, playerY-14, 23,  28)) {
+            playerHealth -= 5;
+            normalItr.remove();
+            combatTimer = 90;
+          }
+          else if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400 || (i.time == i.duration && !i.isBounce)){
+            normalItr.remove();
+          }
+        }
+     
+        //bomb test
+        if(frameCount % 60 == 0){
+          bomb b = new bomb(bossX, bossY, playerX, playerY, 90);
+          bombs.add(b);
+        }
+        //bomb code
+        Iterator <bomb> bombItr = bombs.iterator();
+        while(bombItr.hasNext()) {
+          bomb i = bombItr.next();
+          i.update();
+          if (i.fuse == 0){
+            for(int j = 0; j < 8; j++){
+              normalBullet b = new normalBullet((int) i.X, (int) i.Y, j * 45, 10, 20,   5, false, false);
+              normalBullets.add(b);
+            }
+            bombItr.remove();
+          }
+          }
+     
+        //beam test
+        if(frameCount %10 == 0){
+          beam b = new beam((int) random(400, 1600), (int) random(400, 1600), 50);
+          beams.add(b);
+        }
+        if(frameCount %1 == 0){
+          beam b = new beam(800, 800, 50);
+          beams.add(b);
+        }
+        //beam code 
+        Iterator <beam> beamItr = beams.iterator();
+        while(beamItr.hasNext()) {
+          beam i = beamItr.next();
+          i.update();
+          if(i.time > 60){
+            if(circleRect(i.X, i.Y, (i.size)/2, playerX-12, playerY-14, 23, 28)&& i.hasHit == false){
+              playerHealth -= 30;
+              combatTimer = 90;
+              i.hasHit = true;
+            }
+          }
+          if(i.time > 75){
+            beamItr.remove();
+          }
+        }
+     
+        /**
+         * 
+         * BOSS ATTACKS
+         * 
+         */
+     
+     
+     
+     
+     
+     
+     
+     
+     
+         /**
+          * 
+          * DRAW MAJOR SPRITES AND GRAPHICS 
+          *
+          */
+        if (bossAlive) {
+          image(bossSprite, bossX-42, bossY-50);
+          bossX += bossSpd;
+          if (bossX <= 500 || bossX >= 1416) {
+            bossSpd = -bossSpd;
+          }
+        }
+     
+        strokeWeight(1);
+        translate(playerX-400, playerY-400);
+        if (bossHealth >= 1) {
+          stroke(0);
+          fill(50);
+          rect(400, 50, 250, 10);
+          fill(255, 0, 0);
+          rect(400, 50, bossHealth/2, 10);
+          fill(255);
+          text(bossHealth, 600, 60);
+          } 
+     
+          fill (50);
+          rect(20, 700, 100, 5);
+          fill(0, 255, 0);
+          stroke(0);
+          rect(20, 700, playerHealth/10, 10);
+          fill(255);
+          text(playerHealth, 80, 700);
+     
+        if (bossHealth <= 0) {
+          bossAlive = false;
+        }
     }
  
   }
