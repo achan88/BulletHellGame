@@ -45,7 +45,7 @@ public class Sketch1 extends PApplet {
   ArrayList <beam> beams = new ArrayList <beam>();
  
   PImage [] player = new PImage[8];
-  PImage [] menuScreen = new PImage[6];
+  PImage [] menuScreen = new PImage[8];
  
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -73,6 +73,8 @@ public class Sketch1 extends PApplet {
     menuScreen[3] = loadImage("credits_highlight.png");
     menuScreen[4] = loadImage("credits.png");
     menuScreen[5] = loadImage("help.png");
+    menuScreen[6] = loadImage("credits_coloured.png");
+    menuScreen[7] = loadImage("help_coloured.png");
  
     player[0] = loadImage("Gardevoir_Up.png");
     player[1] = loadImage("Gardevoir_Down.png");
@@ -95,19 +97,26 @@ public class Sketch1 extends PApplet {
  
     if (startGame == false) {
 
+      if (mousePressed) {
+        System.out.println("MouseX: " + mouseX + "\nMouseY: " +  mouseY);
+      }
+
+      // go back hit box: X: 26, Y: 735, END POINT X: 133, END POINT Y: 776
       if (credits) {
         image(menuScreen[4], 0 ,0 );
-        if (keyPressed) {
-          if (keyCode == LEFT) {
+        if (mouseX >= 26 && mouseX <= 133 && mouseY >= 735 && mouseY <= 776) {
+          image(menuScreen[6], 0, 0);
+          if (mousePressed) {
             credits ^= true;
-
           }
+
         }
       }
       if (help) {
         image(menuScreen[5], 0, 0);
-        if (keyPressed) {
-          if (keyCode == LEFT) {
+        if (mouseX >= 26 && mouseX <= 133 && mouseY >= 735 && mouseY <= 776) {
+          image(menuScreen[7], 0, 0);
+          if (mousePressed) {
             help ^= true;
           }
         }
