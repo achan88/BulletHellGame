@@ -7,26 +7,40 @@ import processing.core.PApplet;
 import processing.core.PImage;
  
 public class Sketch2 extends PApplet {
+  PImage background;
   PImage background1;
   PImage background2;
   PImage background3;
   PImage playerSprite;
   PImage bossSprite;
+  PImage bossSword1;
+  PImage bossDefault1;
+  PImage bossSlash1;
+  PImage bossSword2;
+  PImage bossSlash2;
+  PImage bossDefault2;
+  PImage bossDefault3;
+  PImage bossShield3;
+  PImage bossSlash3;
+
   PImage menu;
  
-  int bossX = 500;
-  int bossY = 500;
-  int bossSpd = 5;
+  double bossX = 500;
+  double bossY = 500;
+  double bossXSpd;
+  double bossYSpd;
   boolean bossAlive = true;
-  int bossHealth = 500;
+  int bossHealth = 1000;
   int phase = 1;
+  int attack = 0;
+  int attackTimer = 0;
 
   boolean startGame = false;
   boolean credits = false;
   boolean help = false;
  
-  int playerX;
-  int playerY;
+  double playerX;
+  double playerY;
   int playerSpd = 5;
   int playerHealth = 1000;
   int combatTimer = 0;
@@ -64,8 +78,17 @@ public class Sketch2 extends PApplet {
     background1 = loadImage("dark_background.png");
     background2 = loadImage("default_background.png");
     background3 = loadImage("light_background.png");
- 
-    bossSprite = loadImage("silver_default.png");
+    
+    
+    bossDefault1 = loadImage("black_default.png");
+    bossDefault2 = loadImage("silver_default.png");
+    bossDefault3 = loadImage("white_default.png");
+    bossSword1 = loadImage("black_sword.png");
+    bossSword2 = loadImage("silver_sword.png");
+    bossShield3 = loadImage("white_shield.png");
+    bossSlash1 = loadImage("black_slash.png");
+    bossSlash2 = loadImage("silver_slash.png");
+    bossSlash3 = loadImage("white_slash.png");
 
     menuScreen[0] = loadImage("start_menu.png");
     menuScreen[1] = loadImage("start_highlight.png");
@@ -85,7 +108,7 @@ public class Sketch2 extends PApplet {
     playerX = 800;
     playerY = 800;
     playerSprite = player[1];
-    
+    bossSprite = bossDefault1;
   }
  
   /**
@@ -188,7 +211,7 @@ public class Sketch2 extends PApplet {
           playerSprite = player[7];
          }
      
-        translate(-playerX+400, -playerY+400);
+        translate(-(float)playerX+400, -(float)playerY+400);
      
         if(phase == 1){
           image(background1, 0, 0);
@@ -199,7 +222,7 @@ public class Sketch2 extends PApplet {
          if(phase == 3){
           image(background3, 0, 0);
         }
-        image(playerSprite, playerX-12, playerY-14);
+        image(playerSprite, (float)playerX-12, (float)playerY-14);
      
      
      
@@ -223,18 +246,12 @@ public class Sketch2 extends PApplet {
             bossHealth -= 5;
             playerItr.remove();
           }
-          else if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400){
+          else if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400 || i.time == 20){
             playerItr.remove();
           }
         }
      
         // rectangle bullets
-        // test
-        if (frameCount%30==0) {
-          rectBullet b = new rectBullet(bossX, bossY, 0, 10, 80, 5, 60, 1, 0, 20);
-          rectBullets.add(b);
-         }
-        // rectangle bullet code (keep)
         Iterator <rectBullet> rectItr = rectBullets.iterator();
         while(rectItr.hasNext()){
           rectBullet i = rectItr.next();
@@ -248,19 +265,7 @@ public class Sketch2 extends PApplet {
           rectItr.remove();
           }
         }
-     
-        // normal bullets
-        // test
-        if (frameCount%5 == 0) {
-          if(frameCount%30 == 0){
-            for(int i=0; i<18; i++){
-              normalBullet b = new normalBullet(bossX, bossY, i * 20, 8, 10, 30, false, true);
-              normalBullets.add(b);
-            }
-          }
-          normalBullet b = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), 15, 10, 300,  true, false);
-          normalBullets.add(b);
-        }
+
         // normal bullet code (keep)
         Iterator <normalBullet> normalItr = normalBullets.iterator();
         while(normalItr.hasNext()) {
@@ -276,11 +281,6 @@ public class Sketch2 extends PApplet {
           }
         }
      
-        //bomb test
-        if(frameCount % 60 == 0){
-          bomb b = new bomb(bossX, bossY, playerX, playerY, 90);
-          bombs.add(b);
-        }
         //bomb code
         Iterator <bomb> bombItr = bombs.iterator();
         while(bombItr.hasNext()) {
@@ -295,15 +295,6 @@ public class Sketch2 extends PApplet {
           }
           }
      
-        //beam test
-        if(frameCount %10 == 0){
-          beam b = new beam((int) random(400, 1600), (int) random(400, 1600), 50);
-          beams.add(b);
-        }
-        if(frameCount %1 == 0){
-          beam b = new beam(800, 800, 50);
-          beams.add(b);
-        }
         //beam code 
         Iterator <beam> beamItr = beams.iterator();
         while(beamItr.hasNext()) {
@@ -326,14 +317,74 @@ public class Sketch2 extends PApplet {
          * BOSS ATTACKS
          * 
          */
+        bossX += bossXSpd;
+        bossY += bossYSpd;
+
+         if(bossHealth == 600){
+           phase = 2;
+         }
+         else if(bossHealth == 300){
+           phase = 3;
+         }
      
+         if(attack == 0){
+           if(phase == 1){
+              // attack = (int)random(1, 3);
+              attack = 2;
+              attackTimer = 3000;
+           }
+           if(phase == 2){
+
+           }
+         }
      
-     
-     
-     
-     
-     
-     
+         if (attack == 1){
+            attackTimer-=20;
+            bossMove(bossX, bossY, playerX, playerY, 3);
+              if(frameCount%10==0){
+                normalBullet b = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), 15, 10, 300,  false, false);
+                normalBullets.add(b);
+            }
+        }
+
+        if(attack == 2){
+          attackTimer-=10;
+          if(!(bossX < 1040 && bossX > 960 && bossY < 1040 && bossY > 960)){
+            bossMove(bossX, bossY, 1000, 1000, 40);
+          }
+          else{
+            bossX = 1000;
+            bossY = 1000;
+          }
+          if(attackTimer<2400){
+            bossSprite = bossSlash1;
+            if(frameCount % 30 >= 0 && frameCount % 30 < 5){
+              bossSprite = bossSword1;
+            }
+            if(frameCount%20==0){
+              for(int i=0; i<16; i++){
+                normalBullet b = new normalBullet(bossX, bossY, i*22.5, 20, 5, 300, false, false);
+                normalBullets.add(b);
+            }
+          }
+            else if(frameCount%10==0){
+              for(int i=0; i<16; i++){
+                normalBullet b = new normalBullet(bossX, bossY, i*22.5 + 11.25, 20, 5, 300, false, false);
+                normalBullets.add(b);
+            }
+        }
+        }
+        else{
+          bossSprite = bossSword1;
+        }
+      }
+
+        if(attackTimer == 0){
+          bossXSpd = 0;
+          bossYSpd = 0;
+          attack = 0;
+          bossSprite = bossDefault1;
+        }
      
          /**
           * 
@@ -341,15 +392,11 @@ public class Sketch2 extends PApplet {
           *
           */
         if (bossAlive) {
-          image(bossSprite, bossX-42, bossY-50);
-          bossX += bossSpd;
-          if (bossX <= 500 || bossX >= 1416) {
-            bossSpd = -bossSpd;
-          }
+          image(bossSprite, (int)bossX-42, (int)bossY-50);
         }
      
         strokeWeight(1);
-        translate(playerX-400, playerY-400);
+        translate((int)playerX-400, (int)playerY-400);
         if (bossHealth >= 1) {
           stroke(0);
           fill(50);
@@ -408,16 +455,16 @@ public class Sketch2 extends PApplet {
   }
  
   // calculates the angle between 2 points in degrees
-  public double getAngle(int x1, int y1, int x2, int y2){
-    double angle = atan2(y2 - y1, x2 - x1) * 180 / PI;
+  public double getAngle(double x1, double y1, double x2, double y2){
+    double angle = atan2((int)y2 - (int)y1, (int)x2 - (int)x1) * 180 / PI;
     return angle;
   }
  
   // calculates collision between circle and rectangle
-  public boolean circleRect(float circleX, float circleY, float size, float rectangleX, float rectangleY, float rectangleWidth, float rectangleHeight) {
+  public boolean circleRect(double circleX, double circleY, float size, double rectangleX, double rectangleY, float rectangleWidth, float rectangleHeight) {
     float radius = size/2;
-    float tempX = circleX;
-    float tempY = circleY;
+    double tempX = circleX;
+    double tempY = circleY;
  
     if (circleX < rectangleX) {
       tempX = rectangleX;
@@ -432,9 +479,9 @@ public class Sketch2 extends PApplet {
       tempY = rectangleY + rectangleHeight;
     }
  
-    float distX = circleX - tempX;
-    float distY = circleY - tempY;
-    float distance = sqrt((distX*distX) + (distY*distY));
+    double distX = circleX - tempX;
+    double distY = circleY - tempY;
+    double distance = sqrt((float)((distX*distX) + (distY*distY)));
  
     if (distance <= radius) {
       return true;
@@ -442,23 +489,45 @@ public class Sketch2 extends PApplet {
     return false;
   }
  
-  public boolean rectRect(float rect1X, float rect1Y, float rect1Width, float rect1Height, float rect2X, float rect2Y, float rect2Width, float rect2Height){
+  public boolean rectRect(double rect1X, double rect1Y, float rect1Width, float rect1Height, double rect2X, double rect2Y, float rect2Width, float rect2Height){
     if (rect1X < rect2X + rect2Width && rect1X+rect1Width > rect2X && rect1Y < rect2Y + rect2Height && rect1Y + rect1Height > rect2Y){
       return true;
     } 
     return false;
   }
  
+  public void bossMove(double x, double y, double destx, double desty, int speed){
+    double dx = destx - x;
+    double dy = desty - y;
+
+    double length = Math.sqrt(dx*dx + dy*dy);
+ 
+    dx /= length;
+    dy /= length;
+   
+    bossXSpd = dx * speed;
+    bossYSpd = dy * speed;
+  }
+
+
+
+
+
+
+
+
+
   class playerBullet {
-  int X;
-  int Y;
+  double X;
+  double Y;
   double velX;
   double velY;
   double dx;
   double dy;
   double length;
+  int time = 0;
  
-  playerBullet(int x, int y, int destx, int desty){
+  playerBullet(double x, double y, double destx, double desty){
   this.X = x;
   this.Y = y;
   dx = destx - X;
@@ -474,12 +543,13 @@ public class Sketch2 extends PApplet {
   }
  
   void update(){
+    time++;
     X += velX;
     Y += velY;
     fill(255, 160, 255);
     strokeWeight(1);
     stroke(75, 0, 130);
-    ellipse(X, Y, 8, 8);
+    ellipse((int)X, (int)Y, 8, 8);
    }
   }
  
@@ -494,7 +564,7 @@ public class Sketch2 extends PApplet {
     int size; 
     int time;
  
-    normalBullet(int x, int y, double angle, int size, int speed, int duration, boolean isGold, boolean isBounce) {
+    normalBullet(double x, double y, double angle, int size, int speed, int duration, boolean isGold, boolean isBounce) {
       this.X = x;
       this.Y = y;
       this.isGold = isGold;
@@ -534,8 +604,8 @@ public class Sketch2 extends PApplet {
  
   }
   class rectBullet {
-    int X;
-    int Y;
+    double X;
+    double Y;
     double velX;
     double velY;
     double duration;
@@ -546,7 +616,7 @@ public class Sketch2 extends PApplet {
     double shrinkY;
     int damage;
  
-    rectBullet(int x, int y, double velX, double velY, double width, double height, int duration, double shrinkX, double shrinkY, int damage){
+    rectBullet(double x, double y, double velX, double velY, double width, double height, int duration, double shrinkX, double shrinkY, int damage){
     this.X = x;
     this.Y = y;
     this.velX = velX;
@@ -569,7 +639,7 @@ public class Sketch2 extends PApplet {
       fill(200, 100, 100);
       strokeWeight(1);
       stroke(0);
-      rect (X, Y, (float) width, (float) height);
+      rect ((int)X, (int)Y, (float) width, (float) height);
     }
   }
  
@@ -581,12 +651,12 @@ public class Sketch2 extends PApplet {
     double velY;
     double dx;
     double dy;
-    int destx;
-    int desty;
+    double destx;
+    double desty;
     double length;
     int fuse;
  
-    bomb(int x, int y, int destx, int desty, int fuse) {
+    bomb(double x, double y, double destx, double desty, int fuse) {
       this.X = x;
       this.Y = y;
       dx = destx - X;
@@ -631,12 +701,12 @@ public class Sketch2 extends PApplet {
   }
  
     class beam {
-    int X;
-    int Y;
+    double X;
+    double Y;
     int size;
     int time;
     boolean hasHit = false;
-    beam(int x, int y, int size){
+    beam(double x, double y, int size){
       this.X = x;
       this.Y = y;
       this.size = size;
@@ -649,16 +719,16 @@ public class Sketch2 extends PApplet {
         noFill();
         strokeWeight(1);
         stroke(255, 0, 0);
-        ellipse(X, Y, size, size);    
+        ellipse((int)X, (int)Y, size, size);    
         strokeWeight(0);
         fill(255, 200, 200);
-        ellipse(X, Y, (float) (size*time/60), (float) (size*time/60));
+        ellipse((int)X, (int)Y, (float) (size*time/60), (float) (size*time/60));
       }
       if(time >= 60){
       strokeWeight(1);
       stroke(255, 0, 0);
       fill(255, 0, 0);
-      ellipse(X, Y, size, size);
+      ellipse((int)X, (int)Y, size, size);
       }
     }
   }
