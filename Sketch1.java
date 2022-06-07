@@ -20,7 +20,10 @@ public class Sketch1 extends PApplet {
   boolean bossAlive = true;
   int bossHealth = 500;
   int phase = 1;
+
   boolean startGame = false;
+  boolean credits = false;
+  boolean help = false;
  
   int playerX;
   int playerY;
@@ -42,7 +45,7 @@ public class Sketch1 extends PApplet {
   ArrayList <beam> beams = new ArrayList <beam>();
  
   PImage [] player = new PImage[8];
-  PImage [] menuScreen = new PImage[4];
+  PImage [] menuScreen = new PImage[6];
  
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -68,6 +71,8 @@ public class Sketch1 extends PApplet {
     menuScreen[1] = loadImage("start_highlight.png");
     menuScreen[2] = loadImage("help_highlight.png");
     menuScreen[3] = loadImage("credits_highlight.png");
+    menuScreen[4] = loadImage("credits.png");
+    menuScreen[5] = loadImage("help.png");
  
     player[0] = loadImage("Gardevoir_Up.png");
     player[1] = loadImage("Gardevoir_Down.png");
@@ -90,24 +95,50 @@ public class Sketch1 extends PApplet {
  
     if (startGame == false) {
 
-      if (mouseX >= 305 && mouseX <= 493 && mouseY >= 207 && mouseY <= 276) {
-        image(menuScreen[1], 0, 0);
-        if(mousePressed) {
-          startGame = true;
+      if (credits) {
+        image(menuScreen[4], 0 ,0 );
+        if (keyPressed) {
+          if (keyCode == LEFT) {
+            credits ^= true;
+
+          }
         }
       }
+      if (help) {
+        image(menuScreen[5], 0, 0);
+        if (keyPressed) {
+          if (keyCode == LEFT) {
+            help ^= true;
+          }
+        }
 
-      else if(mouseX >= 205 && mouseX <= 593 && mouseY >= 322 & mouseY <= 389) {
-        image(menuScreen[2], 0, 0);
       }
-
-
-      else if(mouseX >= 286 && mouseX <= 514 && mouseY >= 434 && mouseY <= 502) {
-        image(menuScreen[3], 0, 0);
-      }
-
-      else {
-        image(menuScreen[0], 0 ,0);
+      if (credits == false && help == false) {
+        if (mouseX >= 305 && mouseX <= 493 && mouseY >= 207 && mouseY <= 276) {
+          image(menuScreen[1], 0, 0);
+          if(mousePressed) {
+            startGame = true;
+          }
+        }
+  
+        else if(mouseX >= 205 && mouseX <= 593 && mouseY >= 322 & mouseY <= 389) {
+          image(menuScreen[2], 0, 0);
+          if (mousePressed) {
+            help ^= true;
+          }
+        }
+  
+  
+        else if(mouseX >= 286 && mouseX <= 514 && mouseY >= 434 && mouseY <= 502) {
+          image(menuScreen[3], 0, 0);
+          if(mousePressed) {
+            credits ^= true;
+          }
+        }
+  
+        else {
+          image(menuScreen[0], 0 ,0);
+        }
       }
       /* 
       first hit box
