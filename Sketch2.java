@@ -14,6 +14,9 @@ public class Sketch2 extends PApplet {
   PImage playerSprite;
   PImage bossSprite;
   PImage bossSword1;
+  PImage bossDefault;
+  PImage bossAttack;
+  PImage bossReady;
   PImage bossDefault1;
   PImage bossSlash1;
   PImage bossSword2;
@@ -34,6 +37,8 @@ public class Sketch2 extends PApplet {
   int phase = 1;
   int attack = 0;
   int attackTimer = 0;
+  boolean bossInvulnerable = false;
+  int phaseTimer = 0;
 
   boolean startGame = false;
   boolean credits = false;
@@ -59,7 +64,7 @@ public class Sketch2 extends PApplet {
   ArrayList <beam> beams = new ArrayList <beam>();
  
   PImage [] player = new PImage[8];
-  PImage [] menuScreen = new PImage[6];
+  PImage [] menuScreen = new PImage[8];
  
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -96,6 +101,9 @@ public class Sketch2 extends PApplet {
     menuScreen[3] = loadImage("credits_highlight.png");
     menuScreen[4] = loadImage("credits.png");
     menuScreen[5] = loadImage("help.png");
+    menuScreen[6] = loadImage("credits_coloured.png");
+    menuScreen[7] = loadImage("help_coloured.png");
+ 
  
     player[0] = loadImage("Gardevoir_Up.png");
     player[1] = loadImage("Gardevoir_Down.png");
@@ -108,6 +116,11 @@ public class Sketch2 extends PApplet {
     playerX = 800;
     playerY = 800;
     playerSprite = player[1];
+    background = background1;
+
+    bossAttack = bossSlash1;
+    bossReady = bossSword1;
+    bossDefault = bossDefault1;
     bossSprite = bossDefault1;
   }
  
@@ -117,20 +130,21 @@ public class Sketch2 extends PApplet {
   public void draw() {
  
     if (startGame == false) {
-
       if (credits) {
         image(menuScreen[4], 0 ,0 );
-        if (keyPressed) {
-          if (keyCode == LEFT) {
+        if (mouseX >= 26 && mouseX <= 133 && mouseY >= 735 && mouseY <= 776) {
+          image(menuScreen[6], 0, 0);
+          if (mousePressed) {
             credits ^= true;
-
           }
+
         }
       }
       if (help) {
         image(menuScreen[5], 0, 0);
-        if (keyPressed) {
-          if (keyCode == LEFT) {
+        if (mouseX >= 26 && mouseX <= 133 && mouseY >= 735 && mouseY <= 776) {
+          image(menuScreen[7], 0, 0);
+          if (mousePressed) {
             help ^= true;
           }
         }
@@ -213,15 +227,8 @@ public class Sketch2 extends PApplet {
      
         translate(-(float)playerX+400, -(float)playerY+400);
      
-        if(phase == 1){
-          image(background1, 0, 0);
-        }
-        if(phase == 2){
-          image(background2, 0, 0);
-        }
-         if(phase == 3){
-          image(background3, 0, 0);
-        }
+        image(background, 0, 0);
+
         image(playerSprite, (float)playerX-12, (float)playerY-14);
      
      
@@ -242,8 +249,8 @@ public class Sketch2 extends PApplet {
           playerBullet i = playerItr.next();
           i.update();
           boolean collide = circleRect(i.X, i.Y, 8f, bossX-42, bossY-50, 80,  80);
-          if (collide) {
-            bossHealth -= 5;
+          if (collide && !bossInvulnerable) {
+            bossHealth -= 2;
             playerItr.remove();
           }
           else if (i.X > 1600 || i.X < 400 || i.Y > 1600 || i.Y < 400 || i.time == 20){
@@ -320,30 +327,61 @@ public class Sketch2 extends PApplet {
         bossX += bossXSpd;
         bossY += bossYSpd;
 
-         if(bossHealth == 600){
+         if(bossHealth == 600 && phase == 1){
            phase = 2;
+           bossInvulnerable = true;
+           phaseTimer = 60;
          }
-         else if(bossHealth == 300){
+         else if(bossHealth == 300 && phase == 2){
            phase = 3;
          }
-     
-         if(attack == 0){
+
+         if(phase == 2 && phaseTimer == 0){
+          bossDefault = bossDefault2;
+          bossAttack = bossSlash2;
+          bossReady = bossSword2;
+          background = background2;
+         }
+          if(phase == 3 && phaseTimer == 0){
+          background = background3;
+          bossDefault = bossDefault3;
+          bossAttack = bossSlash3;
+          bossReady = bossShield3;
+         }
+
+         if(attack == 0 && phaseTimer == 0){
            if(phase == 1){
               attack = (int)random(1, 3);
               attackTimer = 3000;
            }
            if(phase == 2){
-
+             bossInvulnerable = false;
            }
          }
      
          if (attack == 1){
             attackTimer-=20;
+            if(attackTimer < 2600){
             bossMove(bossX, bossY, playerX, playerY, 3);
               if(frameCount%10==0){
                 normalBullet b = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), 15, 10, 300,  false, false);
                 normalBullets.add(b);
             }
+              if(frameCount%30==0){
+                bomb b = new bomb(bossX, bossY, bossX, bossY, 60);
+                bombs.add(b);
+                normalBullet c = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY)+20, 15, 10, 300,  false, false);
+                normalBullet d = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY)-20, 15, 10, 300,  false, false);
+                normalBullets.add(c);
+                normalBullets.add(d);
+              }
+              if(frameCount%30 >= 0 && frameCount%30 < 5){
+                bossSprite = bossAttack;
+              }
+              else{
+                bossSprite = bossReady;
+              }
+         }
         }
 
         if(attack == 2){
@@ -356,11 +394,17 @@ public class Sketch2 extends PApplet {
             bossY = 1000;
           }
           if(attackTimer<2400){
-            bossSprite = bossSlash1;
+            bossSprite = bossAttack;
             if(frameCount % 30 >= 0 && frameCount % 30 < 5){
-              bossSprite = bossSword1;
+              bossSprite = bossReady;
             }
-            if(frameCount%20==0){
+            if (frameCount%30 == 0){
+              for(int i=0; i<16; i++){
+                normalBullet b = new normalBullet(bossX, bossY, i*22.5 - 7.5, 20, 5, 300, false, false);
+                normalBullets.add(b);
+            }
+          }
+            else if(frameCount%20==0){
               for(int i=0; i<16; i++){
                 normalBullet b = new normalBullet(bossX, bossY, i*22.5, 20, 5, 300, false, false);
                 normalBullets.add(b);
@@ -368,13 +412,13 @@ public class Sketch2 extends PApplet {
           }
             else if(frameCount%10==0){
               for(int i=0; i<16; i++){
-                normalBullet b = new normalBullet(bossX, bossY, i*22.5 + 11.25, 20, 5, 300, false, false);
+                normalBullet b = new normalBullet(bossX, bossY, i*22.5 + 7.5, 20, 5, 300, false, false);
                 normalBullets.add(b);
             }
         }
         }
         else{
-          bossSprite = bossSword1;
+          bossSprite = bossReady;
         }
       }
 
@@ -382,9 +426,23 @@ public class Sketch2 extends PApplet {
           bossXSpd = 0;
           bossYSpd = 0;
           attack = 0;
-          bossSprite = bossDefault1;
+          bossSprite = bossDefault;
         }
+
+        if(phaseTimer > 0){
+          if(attack==0){
+          phaseTimer--;
+          }
+          bossMove(bossX, bossY, 1000, 1000, 20);
+          if(bossXSpd == 0 && bossYSpd == 0){
+          bossX = 1000;
+          bossY = 1000;
+          }
+       }
      
+
+
+
          /**
           * 
           * DRAW MAJOR SPRITES AND GRAPHICS 
@@ -401,6 +459,9 @@ public class Sketch2 extends PApplet {
           fill(50);
           rect(400, 50, 250, 10);
           fill(255, 0, 0);
+          if(bossInvulnerable == true){
+            fill(0, 0, 200);
+          }
           rect(400, 50, bossHealth/2, 10);
           fill(255);
           text(bossHealth, 600, 60);
@@ -462,6 +523,7 @@ public class Sketch2 extends PApplet {
   // calculates collision between circle and rectangle
   public boolean circleRect(double circleX, double circleY, float size, double rectangleX, double rectangleY, float rectangleWidth, float rectangleHeight) {
     float radius = size/2;
+    radius *= 0.6;
     double tempX = circleX;
     double tempY = circleY;
  
@@ -496,16 +558,22 @@ public class Sketch2 extends PApplet {
   }
  
   public void bossMove(double x, double y, double destx, double desty, int speed){
-    double dx = destx - x;
-    double dy = desty - y;
-
-    double length = Math.sqrt(dx*dx + dy*dy);
- 
-    dx /= length;
-    dy /= length;
+    if(x < destx + speed && x > destx - speed && y < desty + speed && y > desty - speed){
+      bossXSpd = 0;
+      bossYSpd = 0;
+    }
+    else{
+      double dx = destx - x;
+      double dy = desty - y;
+  
+      double length = Math.sqrt(dx*dx + dy*dy);
    
-    bossXSpd = dx * speed;
-    bossYSpd = dy * speed;
+      dx /= length;
+      dy /= length;
+     
+      bossXSpd = dx * speed;
+      bossYSpd = dy * speed;
+    }
   }
 
 
