@@ -42,6 +42,8 @@ public class Sketch2 extends PApplet {
   int phaseTimer = 0;
   boolean startRotate;
   double tempAngle;
+  double startX = 0; 
+  double startY = 0;
 
   boolean startGame = false;
   boolean credits = false;
@@ -93,13 +95,13 @@ public class Sketch2 extends PApplet {
     
     bossDefault1 = loadImage("black_default.png");
     bossDefault2 = loadImage("silver_default.png");
-    bossDefault3 = loadImage("white_default.png");
+    bossDefault3 = loadImage("white_default_cropped.png");
     bossSword1 = loadImage("black_sword.png");
     bossSword2 = loadImage("silver_sword.png");
-    bossShield3 = loadImage("white_shield.png");
+    bossShield3 = loadImage("white_shield_cropped.png");
     bossSlash1 = loadImage("black_slash.png");
     bossSlash2 = loadImage("silver_slash.png");
-    bossSlash3 = loadImage("white_slash.png");
+    bossSlash3 = loadImage("white_slash_cropped.png");
 
     menuScreen[0] = loadImage("start_menu.png");
     menuScreen[1] = loadImage("start_highlight.png");
@@ -379,9 +381,9 @@ public class Sketch2 extends PApplet {
             }
           }
           if(phase == 2){
-            attack = (int)random(4, 6);
+            attack = (int)random(4, 7);
             while(attack == prevattack){
-              attack = (int)random(4, 6);
+              attack = (int)random(4, 7);
             }
           }
           if(phase == 3){
@@ -637,6 +639,101 @@ public class Sketch2 extends PApplet {
       }
       }
     }
+
+    if(attack == 6){
+      if(attackTimer == 3000){
+        bossInvulnerable = true;
+        beam b = new beam(1000, 1000, 150);
+        beams.add(b);
+        bossMove(bossX, bossY, 1000, 1000, 40);
+      }
+      if(attackTimer == 2700){
+        bossSprite = bossReady;
+        if(bossHealth!=300){
+          bossInvulnerable = false;
+        }
+        for(int i=0; i<45; i++){
+          beam b = new beam(1000 + cos((float)(i))*150, 1000 + sin((float)(i))*150, 80);
+          beams.add(b);
+        }
+      }
+      attackTimer-=10;
+      if(attackTimer > 2300){
+        if(bossX < 1040 && bossX > 960 && bossY < 1040 && bossY > 960){
+          bossXSpd = 0;
+          bossYSpd = 0;
+          bossX = 1000;
+          bossY = 1000;
+      }
+    }
+      if(attackTimer == 2300){
+        startX = playerX;
+        startY = playerY;
+        tempAngle = getAngle(1000, 1000, startX, startY);
+      }
+      if(attackTimer < 2300){
+        bossSprite = bossReady;
+        if(frameCount % 20 >= 0 && frameCount % 20 <5){
+          bossSprite = bossAttack;
+        }
+        if(attackTimer >= 2200){
+          bossMove(bossX, bossY, startX, startY, 15);
+        }
+        else{
+          bossX = 1000 + cos((float)(tempAngle*Math.PI/180)) * 150;
+          bossY = 1000 + sin((float)(tempAngle*Math.PI/180)) * 150;
+          tempAngle+=8;
+        }
+        if(attackTimer < 2300){
+          if(frameCount % 10 == 0){
+            for(int i=0; i<16; i++){
+              normalBullet b = new normalBullet(bossX, bossY, i*22.5 + 7.5, 20, 5, 300, 20, false, false);
+              normalBullets.add(b);
+            }
+          }
+          if(frameCount % 10 == 0){
+            for(int i=0; i<10; i++){
+              beam b = new beam(random(400, 1600), random(400, 1600), 50);
+              beams.add(b);
+            }
+          }
+        }
+      
+      }
+    }
+
+    if (attack == 7){
+      attackTimer-=10;
+      if(attackTimer%600 > 450){
+        bossSprite = bossReady;
+      }
+      if(attackTimer % 600 == 450){
+        startX = playerX + random(-100, 100);
+        startY = playerY + random(-100, 100);
+        beam b = new beam(startX, startY, 50);
+        beam c = new beam(startX, startY, 100);
+        beams.add(b);
+        beams.add(b);
+      }
+      if(attackTimer % 600 > 150 && attackTimer % 600 < 450){
+        bossX = -500;
+        bossY = -500;
+      }
+      else{
+        bossX = startX;
+        bossY = startY;
+        bossSprite = bossAttack;
+      }
+
+
+    }
+
+
+
+
+
+
+
     // Reset variables after attack ends
     if(attackTimer == 0){
       bossXSpd = 0;
