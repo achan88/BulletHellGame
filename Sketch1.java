@@ -603,16 +603,15 @@ public class Sketch1 extends PApplet {
         speedCooldown++;
       }
 
-      if (speedCooldown == 10 && key == 'h') {
-          
-        while (speedTimer < 90) {
-          playerSpd = 10;
-          speedTimer ++;
-        }
-
+      if (speedCooldown == 300 && key == 'f') {
         speedTimer = 0;
         speedCooldown = 0;
+        }
+
         playerSpd = 5;
+        if (speedTimer < 90) {
+          playerSpd = 10;
+          speedTimer ++;
         }
       
 
