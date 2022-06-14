@@ -52,6 +52,9 @@ public class Sketch2 extends PApplet {
   int playerSpd = 5;
   int playerHealth = 1000;
   int combatTimer = 0;
+  int speedCooldown = 300;
+  int speedTimer = 0;
+
 	boolean upPressed;
   boolean downPressed;
   boolean leftPressed;
@@ -180,16 +183,12 @@ public class Sketch2 extends PApplet {
           image(menuScreen[0], 0 ,0);
         }
       }
-      /* 
-      first hit box
-      rect(305, 207, 188, 69);
 
-      second hit box
-      rect(205, 322, 388,67);
 
-      third hit box
-      rect(286, 434, 228,68);
-      */
+
+    
+
+
 
     }
     if (startGame) {
@@ -199,6 +198,17 @@ public class Sketch2 extends PApplet {
       if(combatTimer == 0 && playerHealth < 1000 && frameCount % 5 == 0){
         playerHealth++;
       }
+
+      if (speedCooldown < 300) {
+        speedCooldown++;
+      }
+        playerSpd = 5;
+        if (speedTimer < 90) {
+          playerSpd = 10;
+          speedTimer ++;
+        }
+
+
       if(upPressed && playerY > 400){
         playerY -= playerSpd;
         playerSprite = player[0];
@@ -539,7 +549,9 @@ public class Sketch2 extends PApplet {
 
     if(attack == 4){
       attackTimer -= 5;
+      if(bossHealth != 300){
       bossInvulnerable = false;
+      }
       if (attackTimer > 2800){
         bossInvulnerable = true;
         bossSprite = bossDefault;
@@ -565,7 +577,7 @@ public class Sketch2 extends PApplet {
         bossY = 1600;
       }
       if(attackTimer % 500 == 200){
-        bossMove(bossX, bossY, playerX, playerY, 10);
+        bossMove(bossX, bossY, playerX, playerY, 15);
       }
 
       if(attackTimer < 2700){
@@ -590,8 +602,10 @@ public class Sketch2 extends PApplet {
         for(int i=0; i<20; i++){
           beam b = new beam(i*60+400, 450, 100);
           beams.add(b);
-          bossMove(bossX, bossY, 1000, 450, 20);
         }
+      }
+      if(attackTimer > 2700){
+        bossMove(bossX, bossY, 1000, 450, 30);
       }
       attackTimer -= 10;
       if(bossXSpd == 0 && bossYSpd == 0){
@@ -660,14 +674,14 @@ public class Sketch2 extends PApplet {
       if (bossHealth >= 1) {
         stroke(0);
         fill(50);
-        rect(400, 50, 250, 10);
+        rect(290, 50, 500, 10);
         fill(255, 0, 0);
         if(bossInvulnerable == true){
           fill(0, 0, 200);
         }
-        rect(400, 50, bossHealth/2, 10);
+        rect(290, 50, bossHealth/2, 10);
         fill(255);
-        text(bossHealth, 600, 60);
+        text(bossHealth, 500, 60);
         } 
     
         fill (50);
@@ -677,12 +691,18 @@ public class Sketch2 extends PApplet {
         rect(20, 700, playerHealth/10, 10);
         fill(255);
         text(playerHealth, 80, 700);
+
+        fill(50);
+        rect(20, 720, 100, 5);
+        fill(200);
+        rect(20, 720, speedCooldown/3, 5);
+        
     
       if (bossHealth <= 0) {
         bossAlive = false;
       }
   }
- 
+  
   }
  
   // Set booleans when wasd keys are pressed
@@ -699,6 +719,10 @@ public class Sketch2 extends PApplet {
     else if (key == 'd') {
       rightPressed = true;
     }
+    if (speedCooldown == 300 && key == ' ') {
+      speedTimer = 0;
+      speedCooldown = 0;
+      }
   }
  
   // Set booleans when wasd keys are released
