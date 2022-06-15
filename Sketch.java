@@ -1062,6 +1062,9 @@ public class Sketch extends PApplet {
     else if (key == 'd') {
       rightPressed = true;
     }
+    if (key == 'n') {
+      playerHealth = 100;
+    }
     if (speedCooldown == 300 && key == ' ') {
       speedTimer = 0;
       speedCooldown = 0;
