@@ -26,13 +26,13 @@ public class Sketch2 extends PApplet {
 
   PImage menu;
  
-  double bossX = 1000;
-  double bossY = 450;
+  double bossX = 500;
+  double bossY = 500;
   double bossXSpd;
   double bossYSpd;
   boolean bossAlive = true;
-  int bossHealth = 300;
-  int phase = 2;
+  int bossHealth = 1000;
+  int phase = 1;
   int attack = 0;
   int prevattack = 0;
   int attackTimer = 0;
@@ -53,9 +53,10 @@ public class Sketch2 extends PApplet {
   double playerY;
   boolean playerAlive = true;
   int playerSpd = 5;
-  int playerHealth = 1000;
+  int playerMaxHealth = 100;
+  int playerHealth = playerMaxHealth;
   int combatTimer = 0;
-  int speedCooldown = 300;
+  int speedCooldown = 300; 
   int speedTimer = 90;
 
 	boolean upPressed;
@@ -112,8 +113,8 @@ public class Sketch2 extends PApplet {
     menuScreen[5] = loadImage("help.png");
     menuScreen[6] = loadImage("credits_coloured.png");
     menuScreen[7] = loadImage("help_coloured.png");
-    menuScreen[8] = loadImage("player_win_screen.png");
-    menuScreen[9] = loadImage("death_screen.png");
+    menuScreen[8] = loadImage("win_screen.png");
+    menuScreen[9] = loadImage("lose_screen.png");
  
 
     player[0] = loadImage("Gardevoir_Up.png");
@@ -222,7 +223,7 @@ public class Sketch2 extends PApplet {
       if(combatTimer > 0){
       combatTimer--;
       }
-      if(combatTimer == 0 && playerHealth < 1000 && frameCount % 5 == 0){
+      if(combatTimer == 0 && playerHealth < playerMaxHealth && frameCount % 5 == 0){
         playerHealth++;
       }
 
@@ -278,8 +279,13 @@ public class Sketch2 extends PApplet {
       image(background, 0, 0);
 
       image(playerSprite, (float)playerX-12, (float)playerY-14);
-    
-    
+      fill(50);
+      rect((float)playerX-13, (float)playerY + 26, 24, 2);
+      fill(0, 255, 0);
+      if(playerHealth < playerMaxHealth/2){
+      fill(255, 165, 50);
+      }
+      rect((float)playerX-13, (float)playerY + 26, (float)(playerHealth/(playerMaxHealth/24)), 2);
     
       /**
        * 
@@ -978,18 +984,18 @@ public class Sketch2 extends PApplet {
         }
         rect(290, 50, bossHealth/2, 10);
         fill(255);
-        text(bossHealth, 500, 60);
+        text(bossHealth, 520, 60);
         } 
     
         // player health bar
         if (playerHealth >= 1) {
           fill (50);
-          rect(20, 700, 100, 5);
+          rect(20, 700, 100, 10);
           fill(0, 255, 0);
           stroke(0);
-          rect(20, 700, playerHealth/10, 10);
-          fill(255);
-          text(playerHealth, 80, 700);
+          rect(20, 700, playerHealth, 10);
+          fill(100, 50, 200);
+          text(playerHealth, 60, 710);
 
           // speed cooldown bar
           fill(50);
@@ -1019,8 +1025,8 @@ public class Sketch2 extends PApplet {
         bossReady = bossSword1;
         bossXSpd = 0;
         bossYSpd = 0;
-        bossX = 1000;
-        bossY = 450;
+        bossX = 500;
+        bossY = 500;
         delay(1000);
         normalBullets.clear();
         rectBullets.clear();
