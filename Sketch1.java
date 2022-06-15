@@ -43,6 +43,7 @@ public class Sketch1 extends PApplet {
   double startX = 0; 
   double startY = 0;
 
+  // player code -- start here
   boolean startGame = false;
   boolean credits = false;
   boolean help = false;
@@ -93,17 +94,6 @@ public class Sketch1 extends PApplet {
     background1 = loadImage("dark_background.png");
     background2 = loadImage("default_background.png");
     background3 = loadImage("light_background.png");
-    
-    
-    bossDefault1 = loadImage("black_default.png");
-    bossDefault2 = loadImage("silver_default.png");
-    bossDefault3 = loadImage("white_default_cropped.png");
-    bossSword1 = loadImage("black_sword.png");
-    bossSword2 = loadImage("silver_sword.png");
-    bossShield3 = loadImage("white_shield_cropped.png");
-    bossSlash1 = loadImage("black_slash.png");
-    bossSlash2 = loadImage("silver_slash.png");
-    bossSlash3 = loadImage("white_slash_cropped.png");
 
     menuScreen[0] = loadImage("start_menu.png");
     menuScreen[1] = loadImage("start_highlight.png");
@@ -275,19 +265,19 @@ public class Sketch1 extends PApplet {
         playerSprite = player[7];
         }
 
-      // translate screen to centre player
-      translate(-(float)playerX+400, -(float)playerY+400);
-    
-      image(background, 0, 0);
+        // translate screen to centre player
+        translate(-(float)playerX+400, -(float)playerY+400);
+      
+        image(background, 0, 0);
 
-      image(playerSprite, (float)playerX-12, (float)playerY-14);
-      fill(50);
-      rect((float)playerX-13, (float)playerY + 26, 24, 2);
-      fill(0, 255, 0);
-      if(playerHealth < playerMaxHealth/2){
-      fill(255, 165, 50);
-      }
-      rect((float)playerX-13, (float)playerY + 26, (float)(playerHealth/(playerMaxHealth/24)), 2);
+        image(playerSprite, (float)playerX-12, (float)playerY-14);
+        fill(50);
+        rect((float)playerX-13, (float)playerY + 26, 24, 2);
+        fill(0, 255, 0);
+        if(playerHealth < playerMaxHealth/2){
+        fill(255, 165, 50);
+        }
+        rect((float)playerX-13, (float)playerY + 26, (float)(playerHealth/(playerMaxHealth/24)), 2);
     
       /**
        * 
@@ -406,13 +396,7 @@ public class Sketch1 extends PApplet {
       }
 
       // Change boss sprites for the phase
-      if (phase == 2 && phaseTimer == 0 && bossHealth == 600) {
-        bossDefault = bossDefault2;
-        bossAttack = bossSlash2;
-        bossReady = bossSword2;
-        background = background2;
-        bossSprite = bossDefault;
-      }
+    
       if (phase == 3 && phaseTimer == 0 && bossHealth == 300) {
         background = background3;
         bossDefault = bossDefault3;
@@ -424,21 +408,7 @@ public class Sketch1 extends PApplet {
       // Select an attack
       if (attack == 0 && phaseTimer == 0) {
 
-        if (phase == 1) {
-          attack = (int)random(1, 4);
-          while(attack == prevattack) {
-            attack = (int)random(1, 4);
-          }
-        }
-
-        if(phase == 2){
-          attack = (int)random(4, 7);
-          while(attack == prevattack){
-            attack = (int)random(4, 7);
-          }
-        }
-
-        if(phase == 3){
+        if(phase == 3) {
           attack = (int)random(7, 10);
           while(attack == prevattack){
             attack = (int)random(7, 10);
@@ -447,6 +417,7 @@ public class Sketch1 extends PApplet {
 
         bossInvulnerable = false;
         attackTimer = 3000;
+        
       }
     
 
@@ -460,311 +431,6 @@ public class Sketch1 extends PApplet {
       */
 
       // boss follows player and shoots bullets and drops bombs
-      if (attack == 1){
-        attackTimer-=20;
-        if(attackTimer < 2600){
-        bossMove(bossX, bossY, playerX, playerY, 3);
-          if(frameCount % 10 == 0){
-            normalBullet b = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), 15, 10, 300, 10,  false, false);
-            normalBullets.add(b);
-          }
-          if(frameCount % 30 == 0){
-            bomb b = new bomb(bossX, bossY, bossX, bossY, 60);
-            bombs.add(b);
-            normalBullet c = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY)+20, 15, 10, 300, 10,  false, false);
-            normalBullet d = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY)-20, 15, 10, 300, 10,  false, false);
-            normalBullets.add(c);
-            normalBullets.add(d);
-          }
-          if(frameCount % 30 >= 0 && frameCount % 30 < 5){
-            bossSprite = bossAttack;
-          }
-          else{
-            bossSprite = bossReady;
-          }
-        }
-      }
-
-      // centres boss, shoots bullets in rings (around the boss)
-      if(attack == 2){
-        attackTimer-=10;
-        if(!(bossX < 1040 && bossX > 960 && bossY < 1040 && bossY > 960)){
-          bossMove(bossX, bossY, 1000, 1000, 40);
-        }
-        else {
-          bossX = 1000;
-          bossY = 1000;
-        }
-        if(attackTimer < 2400) {
-          bossSprite = bossAttack;
-          if(frameCount % 30 >= 0 && frameCount % 30 < 5){
-            bossSprite = bossReady;
-          }
-          if (frameCount % 30 == 0) {
-            for (int i=0; i < 16; i++) {
-              normalBullet b = new normalBullet(bossX, bossY, i*22.5 - 7.5, 20, 5, 300, 10, false, false);
-              normalBullets.add(b);
-            }
-          }
-          else if (frameCount%20==0){
-            for(int i=0; i < 16; i++){
-              normalBullet b = new normalBullet(bossX, bossY, i * 22.5, 20, 5, 300, 10, false, false);
-              normalBullets.add(b);
-            }
-          }
-          else if(frameCount%10==0){
-            for(int i=0; i < 16; i++){
-              normalBullet b = new normalBullet(bossX, bossY, i*22.5 + 7.5, 20, 5, 300, 10, false, false);
-              normalBullets.add(b);
-            }
-          }
-        }
-        else {
-          bossSprite = bossReady;
-        }
-      }
-
-      // outer rotation attack (with tail)
-      if(attack == 3){
-        if(attackTimer == 3000) {
-          startRotate = false;
-          bossSprite = bossReady;
-          for(int i=0; i<45; i++){
-            beam b = new beam(1000 + cos((float)(i))*500, 1000 + sin((float)(i))*500, 100);
-            beams.add(b);
-          }
-        }
-        attackTimer-=10;
-
-        // picks the closest edge of arena and moves towards the centre of that edge
-        if(startRotate == false){
-          if(bossX < 800){
-            bossMove(bossX, bossY, 500, 1000, 20);
-            if(bossXSpd == 0 && bossYSpd == 0){
-              startRotate = true;
-              tempAngle = getAngle(1000, 1000, bossX, bossY);
-            }
-          }
-          else if(bossX > 1200){
-            bossMove(bossX, bossY, 1500, 1000, 20);
-            if(bossXSpd == 0 && bossYSpd == 0){
-              startRotate = true;
-              tempAngle = getAngle(1000, 1000, bossX, bossY);
-            }
-          }
-          else if(bossY > 1000){
-            bossMove(bossX, bossY, 1000, 1500, 20);
-            if(bossXSpd == 0 && bossYSpd == 0){
-              startRotate = true;
-              tempAngle = getAngle(1000, 1000, bossX, bossY);
-            }
-          }
-          else if(bossY < 1000){
-            bossMove(bossX, bossY, 1000, 500, 20);
-            if(bossXSpd == 0 && bossYSpd == 0){
-              startRotate = true;
-              tempAngle = getAngle(1000, 1000, bossX, bossY);
-            }
-          }
-          else if(bossY == 1000 && bossX == 1000){
-            bossMove(bossX, bossY, 1000, 1500, 20);
-            if(bossXSpd == 0 && bossYSpd == 0){
-              startRotate = true;
-              tempAngle = getAngle(1000, 1000, bossX, bossY);
-            }
-          }
-        }
-        // once it reaches closest edge, begin shooting and spinnning
-        else {
-          bossX = 1000 + cos((float)(tempAngle*Math.PI/180)) * 500;
-          bossY = 1000 + sin((float)(tempAngle*Math.PI/180)) * 500;
-          tempAngle += 1;
-          if(attackTimer < 2400){
-            if(frameCount % 20 == 0){
-              rectBullet a = new rectBullet(bossX-40, bossY, 0, 10, 80, 5, 10, -10, 0, 20);
-              rectBullet b = new rectBullet(bossX-40, bossY, 0, -10, 80, 5, 10, -10, 0, 20);
-              rectBullet c = new rectBullet(bossX, bossY-40, 10, 0, 5, 80, 10, 0, -10, 20);
-              rectBullet d = new rectBullet(bossX, bossY-40, -10, 0, 5, 80, 10, 0, -10, 20);
-              rectBullets.add(a);
-              rectBullets.add(b);
-              rectBullets.add(c);
-              rectBullets.add(d);
-            }
-            if(frameCount % 10 == 0){
-              normalBullet e = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), 20, 10, 300, 10, false, false);
-              normalBullets.add(e);
-            }
-            if(frameCount%30 == 0){
-              normalBullet f = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY)-10, 20, 10, 300, 10, false, false);
-              normalBullets.add(f);
-              normalBullet g = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY)+10, 20, 10, 300, 10, false, false);
-              normalBullets.add(g);
-            }
-            normalBullet h = new normalBullet(bossX, bossY, getAngle(bossX, bossY, 1000, 1000) + 180, 30, 10, 30, 50, false, false); 
-            normalBullets.add(h);
-            bossSprite = bossReady;
-            if(frameCount%30 >=0 && frameCount%30 <5){
-              bossSprite = bossAttack;
-            }
-          }
-        }
-      }
-
-
-
-      // phase 2 ATTACKS
-
-      // charge attack
-      if(attack == 4) {
-        attackTimer -= 5;
-        if(bossHealth != 300) {
-        bossInvulnerable = false;
-        }
-        if (attackTimer > 2800) {
-          bossInvulnerable = true;
-          bossSprite = bossDefault;
-        }
-        else{
-        bossSprite = bossReady;
-        }
-        if(attackTimer % 500 == 210){
-          normalBullet b = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), 30, 20, 300, 30, true, false);
-          normalBullets.add(b);
-        }
-        if(bossX < 400 || bossX > 1600 || bossY < 400 || bossY > 1600){
-          bossXSpd = 0;
-          bossYSpd = 0;
-        }
-        if(bossX > 1600){
-          bossX = 1600;
-        }
-        if(bossY < 400){
-          bossY = 400;
-        }
-        if(bossY > 1600){
-          bossY = 1600;
-        }
-        if(attackTimer % 500 == 200){
-          bossMove(bossX, bossY, playerX, playerY, 15);
-        }
-
-        if(attackTimer < 2700){
-          if(frameCount % 15 >= 0 && frameCount %15 < 5){
-            bossSprite = bossAttack;
-          }
-          else{
-            bossSprite = bossReady;
-          }
-          if(frameCount % 15 == 0){
-            float offset = random(0, 20);
-            for(int i = 0; i < 16; i++){
-              normalBullet b = new normalBullet(bossX, bossY, i*22.5 + offset, 10, 10, 30, 10,  false, false);
-              normalBullets.add(b);
-            }
-          }
-        }
-      }
-
-      // rectangle gap dodging 
-      if(attack == 5){
-        if(attackTimer == 3000){
-          for(int i = 0; i < 20; i++){
-            beam b = new beam(i*60+400, 450, 100);
-            beams.add(b);
-          }
-        }
-        if(attackTimer > 2700){
-          bossMove(bossX, bossY, 1000, 450, 30);
-        }
-        attackTimer -= 10;
-        if(bossXSpd == 0 && bossYSpd == 0){
-          bossX = 1000;
-          bossY = 450;
-        }
-        if(attackTimer > 2700){
-          bossSprite = bossReady;
-        }
-        if(attackTimer > 2600 && attackTimer < 2700){
-          bossSprite = bossAttack;
-          bossXSpd = 15;
-          bossYSpd = 0;
-        }
-        if(bossX < 400 || bossX > 1600){
-          bossXSpd *= -1;
-        }
-        if(attackTimer < 2600){
-          bossSprite = bossDefault;
-          if(frameCount % 30 == 0){
-            int gap1 = (int)random(0, 8);
-            int gap2 = (int)random(8, 15);
-            for(int i = 0; i < 15; i++) {
-              if(i != gap1 && i != gap2){
-                rectBullet b = new rectBullet(i*80 + 400, 400, 0, 5, 80, 5, 300, 0, 0, 20);
-                rectBullets.add(b);
-              }
-            }
-          }
-        }
-      }
-
-      // inner rotation + beams
-      if(attack == 6){
-        if(attackTimer == 3000){
-          bossInvulnerable = true;
-          beam b = new beam(1000, 1000, 150);
-          beams.add(b);
-          bossMove(bossX, bossY, 1000, 1000, 40);
-        }
-        if(attackTimer == 2700){
-          bossSprite = bossReady;
-          if(bossHealth != 300){
-            bossInvulnerable = false;
-          }
-          for(int i = 0; i < 45; i++){
-            beam b = new beam(1000 + cos((float)(i))*150, 1000 + sin((float)(i))*150, 80);
-            beams.add(b);
-          }
-        }
-        attackTimer -= 10;
-        if(attackTimer > 2300){
-          if(bossX < 1040 && bossX > 960 && bossY < 1040 && bossY > 960){
-            bossXSpd = 0;
-            bossYSpd = 0;
-            bossX = 1000;
-            bossY = 1000;
-          }
-        }
-        if(attackTimer == 2300){
-          startX = playerX;
-          startY = playerY;
-          tempAngle = getAngle(1000, 1000, startX, startY);
-        }
-        if(attackTimer < 2300){
-          bossSprite = bossReady;
-          if(frameCount % 20 >= 0 && frameCount % 20 <5){
-            bossSprite = bossAttack;
-          }
-          if(attackTimer >= 2200){
-            bossMove(bossX, bossY, startX, startY, 15);
-          }
-          else{
-            bossX = 1000 + cos((float)(tempAngle*Math.PI/180)) * 150;
-            bossY = 1000 + sin((float)(tempAngle*Math.PI/180)) * 150;
-            tempAngle+=8;
-            if(frameCount % 10 == 0){
-              for(int i=0; i<16; i++){
-                normalBullet b = new normalBullet(bossX, bossY, i*22.5 + 7.5, 20, 5, 300, 20, false, false);
-                normalBullets.add(b);
-              }
-
-              for(int i=0; i<10; i++){
-                beam b = new beam(random(400, 1600), random(400, 1600), 50);
-                beams.add(b);
-              }
-            }
-          }
-        }
-      }
 
       // teleporting attack
       if (attack == 7){
@@ -923,6 +589,7 @@ public class Sketch1 extends PApplet {
             }
           }
         }
+
         if(attackTimer == 2850 || attackTimer == 1350){
           startX = 10 * startY;
           tempAngle = 180 + 90 * startY; 
@@ -1084,12 +751,6 @@ public class Sketch1 extends PApplet {
     }
   }
  
-  // calculates the angle between 2 points in degrees
-  public double getAngle(double x1, double y1, double x2, double y2){
-    double angle = atan2((int)y2 - (int)y1, (int)x2 - (int)x1) * 180 / PI;
-    return angle;
-  }
- 
   // calculates collision between circle and rectangle
   public boolean circleRect(double circleX, double circleY, float size, double rectangleX, double rectangleY, float rectangleWidth, float rectangleHeight) {
     float radius = size/2;
@@ -1120,6 +781,20 @@ public class Sketch1 extends PApplet {
     return false;
   }
  
+
+
+
+
+
+
+
+
+  // calculates the angle between 2 points in degrees
+  public double getAngle(double x1, double y1, double x2, double y2){
+    double angle = atan2((int)y2 - (int)y1, (int)x2 - (int)x1) * 180 / PI;
+    return angle;
+  }
+
   public boolean rectRect(double rect1X, double rect1Y, float rect1Width, float rect1Height, double rect2X, double rect2Y, float rect2Width, float rect2Height){
     if (rect1X < rect2X + rect2Width && rect1X+rect1Width > rect2X && rect1Y < rect2Y + rect2Height && rect1Y + rect1Height > rect2Y){
       return true;
@@ -1153,43 +828,43 @@ public class Sketch1 extends PApplet {
 
 
 
-
   class playerBullet {
-  double X;
-  double Y;
-  double velX;
-  double velY;
-  double dx;
-  double dy;
-  double length;
-  int time = 0;
- 
-  playerBullet(double x, double y, double destx, double desty){
-  this.X = x;
-  this.Y = y;
-  dx = destx - X;
-  dy = desty - Y;
- 
-  length = Math.sqrt(dx*dx + dy*dy);
- 
-  dx /= length;
-  dy /= length;
- 
-  velX = dx * 20;
-  velY = dy * 20;
+    double X;
+    double Y;
+    double velX;
+    double velY;
+    double dx;
+    double dy;
+    double length;
+    int time = 0;
+  
+    playerBullet(double x, double y, double destx, double desty){
+    this.X = x;
+    this.Y = y;
+    dx = destx - X;
+    dy = desty - Y;
+  
+    length = Math.sqrt(dx*dx + dy*dy);
+  
+    dx /= length;
+    dy /= length;
+  
+    velX = dx * 20;
+    velY = dy * 20;
+    }
+  
+    void update(){
+      time++;
+      X += velX;
+      Y += velY;
+      fill(255, 160, 255);
+      strokeWeight(1);
+      stroke(75, 0, 130);
+      ellipse((int)X, (int)Y, 8, 8);
+    }
   }
- 
-  void update(){
-    time++;
-    X += velX;
-    Y += velY;
-    fill(255, 160, 255);
-    strokeWeight(1);
-    stroke(75, 0, 130);
-    ellipse((int)X, (int)Y, 8, 8);
-   }
-  }
- 
+
+  // start here -- 
   class normalBullet {
     double X;
     double Y;
@@ -1242,46 +917,6 @@ public class Sketch1 extends PApplet {
     }
  
   }
-  class rectBullet {
-    double X;
-    double Y;
-    double velX;
-    double velY;
-    double duration;
-    double time;
-    double width;
-    double height;
-    double shrinkX;
-    double shrinkY;
-    int damage;
- 
-    rectBullet(double x, double y, double velX, double velY, double width, double height, int duration, double shrinkX, double shrinkY, int damage){
-    this.X = x;
-    this.Y = y;
-    this.velX = velX;
-    this.velY = velY;
-    this.width = width;
-    this.height = height;
-    this.duration = duration;
-    this.shrinkX = shrinkX;
-    this.shrinkY = shrinkY;
-    this.damage = damage;
-    time = 0;
-    }
- 
-    void update(){
-      time++;
-      X += velX + shrinkX/2;
-      Y += velY + shrinkY/2;
-      width -= shrinkX;
-      height -= shrinkY;
-      fill(200, 100, 100);
-      strokeWeight(1);
-      stroke(0);
-      rect ((int)X, (int)Y, (float) width, (float) height);
-    }
-  }
- 
  
   class bomb {
     double X;
@@ -1338,8 +973,53 @@ public class Sketch1 extends PApplet {
       ellipse((int)X, (int)Y, 20, 20);
     }
   }
+
+
+
+
+
+
+  class rectBullet {
+    double X;
+    double Y;
+    double velX;
+    double velY;
+    double duration;
+    double time;
+    double width;
+    double height;
+    double shrinkX;
+    double shrinkY;
+    int damage;
  
-    class beam {
+    rectBullet(double x, double y, double velX, double velY, double width, double height, int duration, double shrinkX, double shrinkY, int damage){
+      this.X = x;
+      this.Y = y;
+      this.velX = velX;
+      this.velY = velY;
+      this.width = width;
+      this.height = height;
+      this.duration = duration;
+      this.shrinkX = shrinkX;
+      this.shrinkY = shrinkY;
+      this.damage = damage;
+      time = 0;
+    }
+ 
+    void update(){
+      time++;
+      X += velX + shrinkX/2;
+      Y += velY + shrinkY/2;
+      width -= shrinkX;
+      height -= shrinkY;
+      fill(200, 100, 100);
+      strokeWeight(1);
+      stroke(0);
+      rect ((int)X, (int)Y, (float) width, (float) height);
+    }
+  }
+ 
+  class beam {
     double X;
     double Y;
     int size;
@@ -1351,7 +1031,7 @@ public class Sketch1 extends PApplet {
       this.size = size;
       time = 0;
     }
- 
+
     void update() {
       time++;
       if(time < 60){
