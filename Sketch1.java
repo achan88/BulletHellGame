@@ -6,7 +6,7 @@ import javax.swing.text.DefaultStyledDocument.ElementSpec;
 import processing.core.PApplet;
 import processing.core.PImage;
  
-public class Sketch2 extends PApplet {
+public class Sketch1 extends PApplet {
   PImage background;
   PImage background1;
   PImage background2;
