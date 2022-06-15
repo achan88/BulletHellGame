@@ -33,7 +33,7 @@ public class Sketch2 extends PApplet {
   double bossXSpd;
   double bossYSpd;
   boolean bossAlive = true;
-  int bossHealth = 1000;
+  int bossHealth = 300;
   int phase = 2;
   int attack = 0;
   int prevattack = 0;
@@ -699,6 +699,102 @@ public class Sketch2 extends PApplet {
       }
     }
 
+    if (attack == 7){
+      attackTimer-=10;
+      if(attackTimer > 2350){
+        bossX = -500;
+        bossY = -500;
+      }
+      else{
+        if(attackTimer%600 > 450){
+          bossSprite = bossReady;
+        }
+        if(attackTimer % 600 == 450){
+          startX = playerX + random(-200, 200);
+          startY = playerY + random(-200, 200);
+          while(startX<=400 || startX >= 1600){
+            startX = playerX + random(-200, 200);
+          }
+          while(startY <= 400 || startY >= 1600){
+            startY = playerY + random(-200, 200);
+          }
+          beam b = new beam(startX, startY, 50);
+          beam c = new beam(startX, startY, 100);
+          beams.add(b);
+          beams.add(c);
+        }
+        if(attackTimer % 600 > 150 && attackTimer % 600 < 450){
+          bossX = -500;
+          bossY = -500;
+        }
+        if(attackTimer % 600 < 150){
+          bossX = startX;
+          bossY = startY;
+          if(attackTimer % 600 == 140){
+            for(int i=0; i<16; i++){
+              normalBullet b = new normalBullet(bossX, bossY, i*22.5, 15, 10, 30, 30, false, true);
+              normalBullets.add(b);
+            }
+          }
+          bossSprite = bossAttack;
+          if(frameCount % 2 == 0){
+            for(int i=0; i<3; i++){
+              normalBullet b = new normalBullet(bossX, bossY, random(0, 360), 10, 8, 60, 20, true, false);
+              normalBullets.add(b);
+            }
+          }
+        }
+      }
+    }
+
+    if(attack == 8){
+      if(attackTimer == 3000){
+        bossX = -500;
+        bossY = -500;
+        beam b = new beam(1000, 1000, 300);
+        beams.add(b);
+        beam c = new beam(1000, 1000, 50);
+        beams.add(c);
+      }
+      if(attackTimer == 2700){
+        bossSprite = bossAttack;
+        bossX = 1000;
+        bossY = 1000;
+        tempAngle = 0;
+        for(int i=0; i<8; i++){
+          normalBullet b = new normalBullet(bossX, bossY, tempAngle + i * 45, 30, 10, 300, 20, true, false);
+          normalBullets.add(b);
+        }
+      }
+      attackTimer-=10;
+      if(attackTimer < 2400){
+        bossInvulnerable = true;
+        if(frameCount % 60 >= 0 && frameCount % 60 < 30){
+          bossInvulnerable = false;
+        }
+          tempAngle+=0.8;
+          if(frameCount%30 == 0){
+            for(int i=0; i<5; i++){
+              beam b = new beam(random(400, 1000), random(400, 1000), 50);
+              beam c = new beam(random(1000, 1600), random(400, 1000), 50);
+              beam d = new beam(random(400, 1000), random(1000, 1600), 50);
+              beam e = new beam(random(1000, 1600), random(1000, 1600), 50);
+              beams.add(b);
+              beams.add(c);
+              beams.add(d);
+              beams.add(e);
+            }
+            bomb b = new bomb(bossX, bossY, playerX, playerY, 60);
+            bombs.add(b);
+          }
+          for(int i=0; i<8; i++){
+            normalBullet b = new normalBullet(bossX, bossY, tempAngle + i * 45, 20, 20, 300, 20, true, false);
+            normalBullets.add(b);
+          }
+      }
+    }
+
+
     // Reset variables after attack ends
     if(attackTimer == 0){
       bossXSpd = 0;
@@ -1090,4 +1186,4 @@ public class Sketch2 extends PApplet {
       }
     }
   }
-}
+}         
