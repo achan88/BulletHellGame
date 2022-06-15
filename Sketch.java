@@ -462,12 +462,16 @@ public class Sketch extends PApplet {
       // boss follows player and shoots bullets and drops bombs
       if (attack == 1){
         attackTimer-=20;
+
+        // after 400 ticks, boss starts moving and attacking
         if(attackTimer < 2600){
         bossMove(bossX, bossY, playerX, playerY, 3);
+          // boss shoots towards the player every 10 frames
           if(frameCount % 10 == 0){
             normalBullet b = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), 15, 10, 300, 10,  false, false);
             normalBullets.add(b);
           }
+          // boss drops bomb and shoots 2 bullets to the side of the player every 10 frames
           if(frameCount % 30 == 0){
             bomb b = new bomb(bossX, bossY, bossX, bossY, 60);
             bombs.add(b);
@@ -485,9 +489,13 @@ public class Sketch extends PApplet {
         }
       }
 
+
+
       // centres boss, shoots bullets in rings (around the boss)
       if(attack == 2){
         attackTimer-=10;
+
+        // boss moves to center
         if(!(bossX < 1040 && bossX > 960 && bossY < 1040 && bossY > 960)){
           bossMove(bossX, bossY, 1000, 1000, 40);
         }
@@ -495,6 +503,8 @@ public class Sketch extends PApplet {
           bossX = 1000;
           bossY = 1000;
         }
+
+        // after 2 seconds, boss shoots a ring of 16 bullets every 10 frames
         if(attackTimer < 2400) {
           bossSprite = bossAttack;
           if(frameCount % 30 >= 0 && frameCount % 30 < 5){
@@ -524,8 +534,13 @@ public class Sketch extends PApplet {
         }
       }
 
+
+
+    
       // outer rotation attack (with tail)
       if(attack == 3){
+
+        // fire a ring of beams around the outer perimeter as a warning
         if(attackTimer == 3000) {
           startRotate = false;
           bossSprite = bossReady;
@@ -534,6 +549,7 @@ public class Sketch extends PApplet {
             beams.add(b);
           }
         }
+
         attackTimer-=10;
 
         // picks the closest edge of arena and moves towards the centre of that edge
@@ -574,11 +590,14 @@ public class Sketch extends PApplet {
             }
           }
         }
+
         // once it reaches closest edge, begin shooting and spinnning
         else {
           bossX = 1000 + cos((float)(tempAngle*Math.PI/180)) * 500;
           bossY = 1000 + sin((float)(tempAngle*Math.PI/180)) * 500;
           tempAngle += 1;
+
+          // rectangle shots
           if(attackTimer < 2400){
             if(frameCount % 20 == 0){
               rectBullet a = new rectBullet(bossX-40, bossY, 0, 10, 80, 5, 10, -10, 0, 20);
@@ -590,18 +609,22 @@ public class Sketch extends PApplet {
               rectBullets.add(c);
               rectBullets.add(d);
             }
+            // shots toward the player
             if(frameCount % 10 == 0){
               normalBullet e = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), 20, 10, 300, 10, false, false);
               normalBullets.add(e);
             }
+            // shots to the sides of the player 
             if(frameCount%30 == 0){
               normalBullet f = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY)-10, 20, 10, 300, 10, false, false);
               normalBullets.add(f);
               normalBullet g = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY)+10, 20, 10, 300, 10, false, false);
               normalBullets.add(g);
             }
+            // tail that shoots away from the center
             normalBullet h = new normalBullet(bossX, bossY, getAngle(bossX, bossY, 1000, 1000) + 180, 30, 10, 30, 50, false, false); 
             normalBullets.add(h);
+
             bossSprite = bossReady;
             if(frameCount%30 >=0 && frameCount%30 <5){
               bossSprite = bossAttack;
@@ -612,11 +635,15 @@ public class Sketch extends PApplet {
 
 
 
+
       // phase 2 ATTACKS
+
 
       // charge attack, moves to edge closest to player
       if(attack == 4) {
         attackTimer -= 5;
+
+        // make boss invulnerable for the first 200 ticks of the attack
         if(bossHealth != 300) {
         bossInvulnerable = false;
         }
@@ -627,10 +654,14 @@ public class Sketch extends PApplet {
         else{
         bossSprite = bossReady;
         }
+
+        // fires a warning shot right before charging
         if(attackTimer % 500 == 210){
           normalBullet b = new normalBullet(bossX, bossY, getAngle(bossX, bossY, playerX, playerY), 30, 20, 300, 30, true, false);
           normalBullets.add(b);
         }
+
+        // ensure the boss does not leave the arena or get caught out of bounds
         if(bossX < 400 || bossX > 1600 || bossY < 400 || bossY > 1600){
           bossXSpd = 0;
           bossYSpd = 0;
@@ -644,12 +675,15 @@ public class Sketch extends PApplet {
         if(bossY > 1600){
           bossY = 1600;
         }
+        
+        // sets boss to move toward the player for the remaining 200 ticks of the cycle
         if(attackTimer % 500 == 200){
           bossMove(bossX, bossY, playerX, playerY, 15);
         }
 
+        // Shoots 16 shots in a ring every 15 frames
         if(attackTimer < 2700){
-          if(frameCount % 15 >= 0 && frameCount %15 < 5){
+          if(frameCount % 15 >= 0 && frameCount % 15 < 5){
             bossSprite = bossAttack;
           }
           else{
@@ -665,18 +699,25 @@ public class Sketch extends PApplet {
         }
       }
 
+
+
+
       // rectangle gap dodging 
       if(attack == 5){
+        // shoots a row of beams along the top of the arena
         if(attackTimer == 3000){
           for(int i = 0; i < 20; i++){
             beam b = new beam(i*60+400, 450, 100);
             beams.add(b);
           }
         }
+
+        attackTimer -= 10;
+
+        // moves boss to the middle of the top edge
         if(attackTimer > 2700){
           bossMove(bossX, bossY, 1000, 450, 30);
         }
-        attackTimer -= 10;
         if(bossXSpd == 0 && bossYSpd == 0){
           bossX = 1000;
           bossY = 450;
@@ -684,6 +725,8 @@ public class Sketch extends PApplet {
         if(attackTimer > 2700){
           bossSprite = bossReady;
         }
+
+        // boss begins to move from side to side
         if(attackTimer > 2600 && attackTimer < 2700){
           bossSprite = bossAttack;
           bossXSpd = 15;
@@ -692,6 +735,8 @@ public class Sketch extends PApplet {
         if(bossX < 400 || bossX > 1600){
           bossXSpd *= -1;
         }
+
+        // generates a row of rectangle bullets every second, with 2 randomized gaps (1 on each side)
         if(attackTimer < 2600){
           bossSprite = bossDefault;
           if(frameCount % 30 == 0){
@@ -707,8 +752,14 @@ public class Sketch extends PApplet {
         }
       }
 
+
+
+
+
       // inner rotation (bullets) + beams
       if(attack == 6){
+
+        // shoots a beam on the center and moves the boss to the center. boss is invulnerable for the first second
         if(attackTimer == 3000){
           bossInvulnerable = true;
           beam b = new beam(1000, 1000, 150);
@@ -720,12 +771,16 @@ public class Sketch extends PApplet {
           if(bossHealth != 300){
             bossInvulnerable = false;
           }
+          // shoots a small circle of beams around the center
           for(int i = 0; i < 45; i++){
             beam b = new beam(1000 + cos((float)(i))*150, 1000 + sin((float)(i))*150, 80);
             beams.add(b);
           }
         }
+
         attackTimer -= 10;
+
+        // keep the boss centered
         if(attackTimer > 2300){
           if(bossX < 1040 && bossX > 960 && bossY < 1040 && bossY > 960){
             bossXSpd = 0;
@@ -734,16 +789,20 @@ public class Sketch extends PApplet {
             bossY = 1000;
           }
         }
+        // lock player coordinates and grab angle between the boss and the player
         if(attackTimer == 2300){
           startX = playerX;
           startY = playerY;
           tempAngle = getAngle(1000, 1000, startX, startY);
         }
+
         if(attackTimer < 2300){
           bossSprite = bossReady;
           if(frameCount % 20 >= 0 && frameCount % 20 < 5){
             bossSprite = bossAttack;
           }
+
+          // boss moves slighty towards the player and then starts spinning
           if(attackTimer >= 2200){
             bossMove(bossX, bossY, startX, startY, 15);
           }
@@ -751,6 +810,8 @@ public class Sketch extends PApplet {
             bossX = 1000 + cos((float)(tempAngle*Math.PI/180)) * 150;
             bossY = 1000 + sin((float)(tempAngle*Math.PI/180)) * 150;
             tempAngle+=8;
+
+            // boss shoots a ring of 16 bullets every 10 frames. 10 random beams are fired every 10 frames.
             if(frameCount % 10 == 0){
               for(int i = 0; i < 16; i++){
                 normalBullet b = new normalBullet(bossX, bossY, i * 22.5 + 7.5, 20, 5, 300, 20, false, false);
@@ -770,18 +831,26 @@ public class Sketch extends PApplet {
 
 
 
-      // phase 3 attacks
-      // teleporting attack
+      // phase 3 ATTACKS
+
+
+      // teleporting attack (every 600 ticks)
       if (attack == 7){
         attackTimer-=10;
+
+        // boss dissapears at the start of the attack
         if(attackTimer > 2350){
           bossX = -500;
           bossY = -500;
         }
+
         else {
+          // for the first 0.5 seconds (150 ticks), boss prepares to jump
           if(attackTimer % 600 > 450){
             bossSprite = bossReady;
           }
+          
+          // for the next 1 second, boss dissapears and a random beam is shot within 200 units of the player
           if(attackTimer % 600 == 450){
             startX = playerX + random(-200, 200);
             startY = playerY + random(-200, 200);
@@ -800,9 +869,12 @@ public class Sketch extends PApplet {
             bossX = -500;
             bossY = -500;
           }
+
+          // for the last 0.5 seconds, the boss reappears on the beam
           if(attackTimer % 600 < 150){
             bossX = startX;
             bossY = startY;
+            // boss shoots a ring of 16 bouncing bullets once
             if(attackTimer % 600 == 140){
               for(int i =0 ; i < 16; i++){
                 normalBullet b = new normalBullet(bossX, bossY, i*22.5, 15, 10, 30, 30, false, true);
@@ -810,6 +882,8 @@ public class Sketch extends PApplet {
               }
             }
             bossSprite = bossAttack;
+
+            // boss shoots 3 shots randomly in a circle every 2 frames
             if(frameCount % 2 == 0){
               for(int i =0 ; i < 3; i++){
                 normalBullet b = new normalBullet(bossX, bossY, random(0, 360), 10, 8, 60, 20, true, false);
@@ -819,9 +893,13 @@ public class Sketch extends PApplet {
           }
         }
       }
+    
+
 
       // cyclone attack
       if(attack == 8){
+
+        // boss dissapears and 2 overlapping beams appear in the center of the arena
         if(attackTimer == 3000){
           bossInvulnerable = true;
           bossX = -500;
@@ -831,6 +909,8 @@ public class Sketch extends PApplet {
           beam c = new beam(1000, 1000, 50);
           beams.add(c);
         }
+
+        // after 1 second, the boss appears in the center and fires a warning shot in 8 directions
         if(attackTimer == 2700){
           bossSprite = bossAttack;
           bossX = 1000;
@@ -841,13 +921,17 @@ public class Sketch extends PApplet {
             normalBullets.add(b);
           }
         }
+
         attackTimer-=10;
+
+        // after another 1 second, boss begins attacking
         if(attackTimer < 2400){
+          // boss is invulnerable every other second
           bossInvulnerable = true;
           if(frameCount % 60 >= 0 && frameCount % 60 < 30){
             bossInvulnerable = false;
           }
-            tempAngle += 0.8;
+            // boss shoots 5 random beams in each quadrant
             if(frameCount % 30 == 0){
               for(int i=0; i<5; i++){
                 beam b = new beam(random(400, 1000), random(400, 1000), 50);
@@ -859,9 +943,13 @@ public class Sketch extends PApplet {
                 beams.add(d);
                 beams.add(e);
               }
+              // boss shoots a 2 second bomb toward the player
               bomb b = new bomb(bossX, bossY, playerX, playerY, 60);
               bombs.add(b);
             }
+
+            // boss shoots 8 bullets in a spiral every frame
+            tempAngle += 0.8;
             for(int i=0; i<8; i++){
               normalBullet b = new normalBullet(bossX, bossY, tempAngle + i * 45, 20, 20, 300, 20, true, false);
               normalBullets.add(b);
@@ -869,8 +957,10 @@ public class Sketch extends PApplet {
         }
       }
 
-      // beams and projectiles
+      // zoning attack
       if (attack == 9){
+
+        // shoot a row of beams across the top and bottom edge of the arena
         if(attackTimer == 3000){
           bossSprite = bossDefault;
           for(int i = 0; i < 21; i++){
@@ -879,6 +969,8 @@ public class Sketch extends PApplet {
             beams.add(b);
             beams.add(c);
           }
+
+          // randomize whether the attack starts at the top or bottom
           if(random(0, 2) < 1){
             startY = 1;
           }
@@ -886,17 +978,13 @@ public class Sketch extends PApplet {
             startY = -1;
           }
         }
+        
+        // switch from top to bottom (or vice versa) halfway into the attack
         if(attackTimer == 1500){
           startY *= -1;
         }
-        attackTimer -= 5;
-        if(attackTimer > 2850 || (attackTimer > 1350 && attackTimer <= 1500)){
-          bossMove(bossX, bossY, 1000, 1000 + 550 * startY, 40);
-        }
-        if(bossXSpd == 0 && bossYSpd == 0){
-          bossX = 1000;
-          bossY = 1000 + 550 * startY;
-        }
+
+        // shoots a row of beams across the top and bottom edge every 3 seconds
         if(frameCount % 90 == 0){
           for(int i = 0; i < 21; i++){
             beam b = new beam(i*60+400, 450, 100);
@@ -905,6 +993,20 @@ public class Sketch extends PApplet {
             beams.add(c);
           }
         }
+
+        attackTimer -= 5;
+
+
+        // moves boss to the top or bottom
+        if(attackTimer > 2850 || (attackTimer > 1350 && attackTimer <= 1500)){
+          bossMove(bossX, bossY, 1000, 1000 + 550 * startY, 40);
+        }
+        if(bossXSpd == 0 && bossYSpd == 0){
+          bossX = 1000;
+          bossY = 1000 + 550 * startY;
+        }
+
+        // generates the wall of rectangle bullets
         if(attackTimer < 2850){
           if((attackTimer > 300 && attackTimer < 1500) || attackTimer > 1800){
             if(frameCount % 10 == 0){
@@ -914,6 +1016,7 @@ public class Sketch extends PApplet {
               }
             }
           }
+          // boss shoots in a semi-circle pattern
           if(attackTimer > 1500 || attackTimer < 1350){
             if(frameCount % 2 == 0){
               normalBullet b = new normalBullet(bossX, bossY, tempAngle, 15, 5, 150, 15, true, false);
@@ -923,12 +1026,15 @@ public class Sketch extends PApplet {
                 startX *= -1;
               }
             }
+            // boss shoots a rebounding bullet straight up/down every 20 frames
             if(frameCount % 20 == 0){
               normalBullet b = new normalBullet(bossX, bossY, 180 + 90 * startY, 20, 10, 60, 30, false, true);
               normalBullets.add(b);
             }
           }
         }
+
+        // sets the attack direction and sets boss to move from side to side
         if(attackTimer == 2850 || attackTimer == 1350){
           startX = 10 * startY;
           tempAngle = 180 + 90 * startY; 
@@ -936,13 +1042,13 @@ public class Sketch extends PApplet {
           bossYSpd = 0;
           bossSprite = bossDefault;
         }
-        if((attackTimer > 1500 && attackTimer < 2850) || attackTimer < 1350){
-          bossSprite = bossAttack;
-        }
         if(bossX < 400 || bossX > 1600){
           bossXSpd *= -1;
         }
-        
+
+        if((attackTimer > 1500 && attackTimer < 2850) || attackTimer < 1350){
+          bossSprite = bossAttack;
+        }
       }
 
 
@@ -1044,11 +1150,10 @@ public class Sketch extends PApplet {
         speedCooldown = 300; 
         speedTimer = 90;
       }
-  }
+    }
   
   }
  
-
 
 
 
