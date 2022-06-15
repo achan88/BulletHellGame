@@ -282,12 +282,12 @@ public class Sketch extends PApplet {
 
       image(playerSprite, (float)playerX-12, (float)playerY-14);
       fill(50);
-      rect((float)playerX-13, (float)playerY + 26, 24, 2);
+      rect((float)playerX-14, (float)playerY + 24, 24, 2);
       fill(0, 255, 0);
       if(playerHealth < playerMaxHealth/2){
       fill(255, 165, 50);
       }
-      rect((float)playerX-13, (float)playerY + 26, (float)(playerHealth/(playerMaxHealth/24)), 2);
+      rect((float)playerX-14, (float)playerY + 24, (float)(playerHealth/(playerMaxHealth/24)), 2);
     
       /**
        * 
@@ -1035,6 +1035,8 @@ public class Sketch extends PApplet {
         bombs.clear();
         beams.clear();
         playerBullets.clear();
+        speedCooldown = 300; 
+        speedTimer = 90;
       }
   }
   
@@ -1124,7 +1126,7 @@ public class Sketch extends PApplet {
   }
  
   public boolean rectRect(double rect1X, double rect1Y, float rect1Width, float rect1Height, double rect2X, double rect2Y, float rect2Width, float rect2Height){
-    if (rect1X < rect2X + rect2Width && rect1X+rect1Width > rect2X && rect1Y < rect2Y + rect2Height && rect1Y + rect1Height > rect2Y){
+    if (rect1X < rect2X + rect2Width - 2 && rect1X+rect1Width > rect2X + 2 && rect1Y < rect2Y + rect2Height -2 && rect1Y + rect1Height > rect2Y + 2){
       return true;
     } 
     return false;

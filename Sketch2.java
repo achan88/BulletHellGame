@@ -1033,6 +1033,8 @@ public class Sketch2 extends PApplet {
         bombs.clear();
         beams.clear();
         playerBullets.clear();
+        speedCooldown = 300; 
+        speedTimer = 90;
       }
   }
   
@@ -1119,7 +1121,7 @@ public class Sketch2 extends PApplet {
   }
  
   public boolean rectRect(double rect1X, double rect1Y, float rect1Width, float rect1Height, double rect2X, double rect2Y, float rect2Width, float rect2Height){
-    if (rect1X < rect2X + rect2Width && rect1X+rect1Width > rect2X && rect1Y < rect2Y + rect2Height && rect1Y + rect1Height > rect2Y){
+    if (rect1X < rect2X + rect2Width - 2 && rect1X+rect1Width > rect2X + 2 && rect1Y < rect2Y + rect2Height -2 && rect1Y + rect1Height > rect2Y + 2){
       return true;
     } 
     return false;
