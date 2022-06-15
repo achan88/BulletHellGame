@@ -1018,7 +1018,7 @@ public class Sketch1 extends PApplet {
         startGame = false;
         credits = false;
         bossHealth = 1000;
-        playerHealth = 1000;
+        playerHealth = 100;
         phase = 1;
         attackTimer = 0;
         attack = 0;
