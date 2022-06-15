@@ -1118,13 +1118,15 @@ public class Sketch extends PApplet {
           rect(20, 720, speedCooldown/3, 5);
         }
         
-    
+      // game win
       if (bossHealth <= 0) {
         bossAlive = false;
         win = true;
         startGame = false;
       }
 
+      // game lose
+      // reset all variables upon potential restart
       if (playerHealth <= 0) {
         lose = true;
         startGame = false;
@@ -1156,10 +1158,11 @@ public class Sketch extends PApplet {
  
 
 
-
-
-
-
+  /**
+   * 
+   * METHODS
+   * 
+   */
 
   // Set booleans when wasd keys are pressed
   public void keyPressed() {
@@ -1200,12 +1203,15 @@ public class Sketch extends PApplet {
     }
   }
  
+
+
   // calculates the angle between 2 points in degrees
   public double getAngle(double x1, double y1, double x2, double y2){
     double angle = atan2((int)y2 - (int)y1, (int)x2 - (int)x1) * 180 / PI;
     return angle;
   }
  
+
   // calculates collision between circle and rectangle
   public boolean circleRect(double circleX, double circleY, float size, double rectangleX, double rectangleY, float rectangleWidth, float rectangleHeight) {
     float radius = size/2;
@@ -1236,6 +1242,7 @@ public class Sketch extends PApplet {
     return false;
   }
  
+  // calculates collision between two rectangles
   public boolean rectRect(double rect1X, double rect1Y, float rect1Width, float rect1Height, double rect2X, double rect2Y, float rect2Width, float rect2Height){
     if (rect1X < rect2X + rect2Width - 2 && rect1X+rect1Width > rect2X + 2 && rect1Y < rect2Y + rect2Height -2 && rect1Y + rect1Height > rect2Y + 2){
       return true;
@@ -1243,6 +1250,7 @@ public class Sketch extends PApplet {
     return false;
   }
  
+  // sets bossXSpd and bossYSpd
   public void bossMove(double x, double y, double destx, double desty, int speed){
     if(x < destx + speed && x > destx - speed && y < desty + speed && y > desty - speed){
       bossXSpd = 0;
@@ -1264,11 +1272,11 @@ public class Sketch extends PApplet {
 
 
 
-
-
-
-
-
+/**
+ * 
+ * BULLET CLASSES
+ *
+ */
 
   class playerBullet {
   double X;
