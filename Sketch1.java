@@ -31,7 +31,7 @@ public class Sketch1 extends PApplet {
   double bossXSpd;
   double bossYSpd;
   boolean bossAlive = true;
-  int bossHealth = 10;
+  int bossHealth = 1000;
   int phase = 3;
   int attack = 0;
   int prevattack = 0;
@@ -73,7 +73,7 @@ public class Sketch1 extends PApplet {
   ArrayList <beam> beams = new ArrayList <beam>();
  
   PImage [] player = new PImage[8];
-  PImage [] menuScreen = new PImage[10];
+  PImage [] menuScreen = new PImage[11];
  
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -112,8 +112,10 @@ public class Sketch1 extends PApplet {
     menuScreen[5] = loadImage("help.png");
     menuScreen[6] = loadImage("credits_coloured.png");
     menuScreen[7] = loadImage("help_coloured.png");
-    menuScreen[8] = loadImage("player_win_screen.png");
-    menuScreen[9] = loadImage("death_screen.png");
+    menuScreen[8] = loadImage("win_screen.png");
+    menuScreen[9] = loadImage("lose_screen.png");
+    menuScreen[10] = loadImage("lose_highlighted.png");
+    
  
 
     player[0] = loadImage("Gardevoir_Up.png");
@@ -151,6 +153,7 @@ public class Sketch1 extends PApplet {
       if (lose) {
         image(menuScreen[9], 0, 0);
         if (mouseX >= 116 && mouseX <= 683 && mouseY >= 437 && mouseY <= 507) {
+          image(menuScreen[10], 0, 0);
           if (mousePressed) {
             lose = false;
             startGame = true;
@@ -934,6 +937,7 @@ public class Sketch1 extends PApplet {
         bossHealth = 1000;
         playerHealth = 1000;
         phase = 1;
+        background = background1;
       }
   }
   
