@@ -32,7 +32,7 @@ public class Sketch1 extends PApplet {
   double bossYSpd;
   boolean bossAlive = true;
   int bossHealth = 1000;
-  int phase = 3;
+  int phase = 1;
   int attack = 0;
   int prevattack = 0;
   int attackTimer = 0;
@@ -53,9 +53,10 @@ public class Sketch1 extends PApplet {
   double playerY;
   boolean playerAlive = true;
   int playerSpd = 5;
-  int playerHealth = 1000;
+  int playerMaxHealth = 100;
+  int playerHealth = playerMaxHealth;
   int combatTimer = 0;
-  int speedCooldown = 300;
+  int speedCooldown = 300; 
   int speedTimer = 90;
 
 	boolean upPressed;
@@ -115,7 +116,6 @@ public class Sketch1 extends PApplet {
     menuScreen[8] = loadImage("win_screen.png");
     menuScreen[9] = loadImage("lose_screen.png");
     menuScreen[10] = loadImage("lose_highlighted.png");
-    
  
 
     player[0] = loadImage("Gardevoir_Up.png");
@@ -146,6 +146,7 @@ public class Sketch1 extends PApplet {
     if (startGame == false) {
 
       if (win) {
+        delay(2000);
         background(0);
         image(menuScreen[8], 0, 0);
         
@@ -224,7 +225,7 @@ public class Sketch1 extends PApplet {
       if(combatTimer > 0){
       combatTimer--;
       }
-      if(combatTimer == 0 && playerHealth < 1000 && frameCount % 5 == 0){
+      if(combatTimer == 0 && playerHealth < playerMaxHealth && frameCount % 5 == 0){
         playerHealth++;
       }
 
@@ -280,8 +281,13 @@ public class Sketch1 extends PApplet {
       image(background, 0, 0);
 
       image(playerSprite, (float)playerX-12, (float)playerY-14);
-    
-    
+      fill(50);
+      rect((float)playerX-13, (float)playerY + 26, 24, 2);
+      fill(0, 255, 0);
+      if(playerHealth < playerMaxHealth/2){
+      fill(255, 165, 50);
+      }
+      rect((float)playerX-13, (float)playerY + 26, (float)(playerHealth/(playerMaxHealth/24)), 2);
     
       /**
        * 
@@ -433,9 +439,9 @@ public class Sketch1 extends PApplet {
         }
 
         if(phase == 3){
-          attack = (int)random(7, 9);
+          attack = (int)random(7, 10);
           while(attack == prevattack){
-            attack = (int)random(7, 9);
+            attack = (int)random(7, 10);
           }
         }
 
@@ -832,6 +838,7 @@ public class Sketch1 extends PApplet {
         }
         attackTimer-=10;
         if(attackTimer < 2400){
+          bossInvulnerable = true;
           if(frameCount % 60 >= 0 && frameCount % 60 < 30){
             bossInvulnerable = false;
           }
@@ -855,6 +862,81 @@ public class Sketch1 extends PApplet {
               normalBullets.add(b);
             }
         }
+      }
+
+      if (attack == 9){
+        if(attackTimer == 3000){
+          bossSprite = bossDefault;
+          for(int i = 0; i < 21; i++){
+            beam b = new beam(i*60+400, 450, 100);
+            beam c = new beam(i*60+400, 1550, 100);
+            beams.add(b);
+            beams.add(c);
+          }
+          if(random(0, 2) < 1){
+            startY = 1;
+          }
+          else{
+            startY = -1;
+          }
+        }
+        if(attackTimer == 1500){
+          startY *= -1;
+        }
+        attackTimer -= 5;
+        if(attackTimer > 2850 || (attackTimer > 1350 && attackTimer <= 1500)){
+          bossMove(bossX, bossY, 1000, 1000 + 550 * startY, 40);
+        }
+        if(bossXSpd == 0 && bossYSpd == 0){
+          bossX = 1000;
+          bossY = 1000 + 550 * startY;
+        }
+        if(frameCount % 90 == 0){
+          for(int i = 0; i < 21; i++){
+            beam b = new beam(i*60+400, 450, 100);
+            beam c = new beam(i*60+400, 1550, 100);
+            beams.add(b);
+            beams.add(c);
+          }
+        }
+        if(attackTimer < 2850){
+          if((attackTimer > 300 && attackTimer < 1500) || attackTimer > 1800){
+            if(frameCount % 10 == 0){
+              for(int i = 0; i < 15; i++) {
+                  rectBullet b = new rectBullet(i*80 + 400, 1000 - startY * 600, 0, 5 * startY, 80, 5, 130, 0, 0, 20);
+                  rectBullets.add(b);
+              }
+            }
+          }
+          if(attackTimer > 1500 || attackTimer < 1350){
+            if(frameCount % 2 == 0){
+              normalBullet b = new normalBullet(bossX, bossY, tempAngle, 15, 5, 150, 15, true, false);
+              normalBullets.add(b);
+              tempAngle += startX;
+              if(tempAngle == 20 || tempAngle == 160 || tempAngle == 340 || tempAngle == 200){
+                startX *= -1;
+              }
+            }
+            if(frameCount % 20 == 0){
+              normalBullet b = new normalBullet(bossX, bossY, 180 + 90 * startY, 20, 10, 60, 30, false, true);
+              normalBullets.add(b);
+            }
+          }
+        }
+        if(attackTimer == 2850 || attackTimer == 1350){
+          startX = 10 * startY;
+          tempAngle = 180 + 90 * startY; 
+          bossXSpd = 15;
+          bossYSpd = 0;
+          bossSprite = bossDefault;
+        }
+        if((attackTimer > 1500 && attackTimer < 2850) || attackTimer < 1350){
+          bossSprite = bossAttack;
+        }
+        if(bossX < 400 || bossX > 1600){
+          bossXSpd *= -1;
+        }
+        
       }
 
 
@@ -904,18 +986,18 @@ public class Sketch1 extends PApplet {
         }
         rect(290, 50, bossHealth/2, 10);
         fill(255);
-        text(bossHealth, 500, 60);
+        text(bossHealth, 520, 60);
         } 
     
         // player health bar
         if (playerHealth >= 1) {
           fill (50);
-          rect(20, 700, 100, 5);
+          rect(20, 700, 100, 10);
           fill(0, 255, 0);
           stroke(0);
-          rect(20, 700, playerHealth/10, 10);
-          fill(255);
-          text(playerHealth, 80, 700);
+          rect(20, 700, playerHealth, 10);
+          fill(100, 50, 200);
+          text(playerHealth, 60, 710);
 
           // speed cooldown bar
           fill(50);
@@ -934,15 +1016,38 @@ public class Sketch1 extends PApplet {
       if (playerHealth <= 0) {
         lose = true;
         startGame = false;
+        credits = false;
         bossHealth = 1000;
         playerHealth = 1000;
         phase = 1;
-        background = background1;
+        attackTimer = 0;
+        attack = 0;
+        bossDefault = bossDefault1;
+        bossAttack = bossSlash1;
+        bossReady = bossSword1;
+        bossXSpd = 0;
+        bossYSpd = 0;
+        bossX = 500;
+        bossY = 500;
+        delay(1000);
+        normalBullets.clear();
+        rectBullets.clear();
+        bombs.clear();
+        beams.clear();
+        playerBullets.clear();
       }
   }
   
   }
  
+
+
+
+
+
+
+
+
   // Set booleans when wasd keys are pressed
   public void keyPressed() {
     if (key == 'w') {
