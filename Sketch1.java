@@ -31,8 +31,8 @@ public class Sketch1 extends PApplet {
   double bossXSpd;
   double bossYSpd;
   boolean bossAlive = true;
-  int bossHealth = 1000;
-  int phase = 1;
+  int bossHealth = 10;
+  int phase = 3;
   int attack = 0;
   int prevattack = 0;
   int attackTimer = 0;
@@ -46,9 +46,12 @@ public class Sketch1 extends PApplet {
   boolean startGame = false;
   boolean credits = false;
   boolean help = false;
+  boolean win = false;
+  boolean lose = false;
  
   double playerX;
   double playerY;
+  boolean playerAlive = true;
   int playerSpd = 5;
   int playerHealth = 1000;
   int combatTimer = 0;
@@ -70,7 +73,7 @@ public class Sketch1 extends PApplet {
   ArrayList <beam> beams = new ArrayList <beam>();
  
   PImage [] player = new PImage[8];
-  PImage [] menuScreen = new PImage[8];
+  PImage [] menuScreen = new PImage[10];
  
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -109,8 +112,10 @@ public class Sketch1 extends PApplet {
     menuScreen[5] = loadImage("help.png");
     menuScreen[6] = loadImage("credits_coloured.png");
     menuScreen[7] = loadImage("help_coloured.png");
+    menuScreen[8] = loadImage("player_win_screen.png");
+    menuScreen[9] = loadImage("death_screen.png");
  
- 
+
     player[0] = loadImage("Gardevoir_Up.png");
     player[1] = loadImage("Gardevoir_Down.png");
     player[2] = loadImage("Gardevoir_Right.png");
@@ -138,6 +143,20 @@ public class Sketch1 extends PApplet {
     // menu screen
     if (startGame == false) {
 
+      if (win) {
+        background(0);
+        image(menuScreen[8], 0, 0);
+        
+      }
+      if (lose) {
+        image(menuScreen[9], 0, 0);
+        if (mouseX >= 116 && mouseX <= 683 && mouseY >= 437 && mouseY <= 507) {
+          if (mousePressed) {
+            lose = false;
+            startGame = true;
+          }
+        }
+      }
       // credits screen
       if (credits) {
         image(menuScreen[4], 0 ,0 );
@@ -161,7 +180,7 @@ public class Sketch1 extends PApplet {
         }
       }
       // start screen
-      if (credits == false && help == false) {
+      if (credits == false && help == false && lose == false && win == false) {
         if (mouseX >= 305 && mouseX <= 493 && mouseY >= 207 && mouseY <= 276) {
           image(menuScreen[1], 0, 0);
           if(mousePressed) {
@@ -886,23 +905,35 @@ public class Sketch1 extends PApplet {
         } 
     
         // player health bar
-        fill (50);
-        rect(20, 700, 100, 5);
-        fill(0, 255, 0);
-        stroke(0);
-        rect(20, 700, playerHealth/10, 10);
-        fill(255);
-        text(playerHealth, 80, 700);
+        if (playerHealth >= 1) {
+          fill (50);
+          rect(20, 700, 100, 5);
+          fill(0, 255, 0);
+          stroke(0);
+          rect(20, 700, playerHealth/10, 10);
+          fill(255);
+          text(playerHealth, 80, 700);
 
-        // speed cooldown bar
-        fill(50);
-        rect(20, 720, 100, 5);
-        fill(200);
-        rect(20, 720, speedCooldown/3, 5);
+          // speed cooldown bar
+          fill(50);
+          rect(20, 720, 100, 5);
+          fill(200);
+          rect(20, 720, speedCooldown/3, 5);
+        }
         
     
       if (bossHealth <= 0) {
         bossAlive = false;
+        win = true;
+        startGame = false;
+      }
+
+      if (playerHealth <= 0) {
+        lose = true;
+        startGame = false;
+        bossHealth = 1000;
+        playerHealth = 1000;
+        phase = 1;
       }
   }
   
