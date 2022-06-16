@@ -1007,9 +1007,9 @@ public class Sketch extends PApplet {
         }
 
         // generates the wall of rectangle bullets
-        if (attackTimer < 2850){
+        if (attackTimer < 2850) {
           if ((attackTimer > 300 && attackTimer < 1500) || attackTimer > 1800) {
-            if (frameCount % 10 == 0){
+            if (frameCount % 10 == 0) {
               for (int i = 0; i < 15; i++) {
                   rectBullet b = new rectBullet(i * 80 + 400, 1000 - startY * 600, 0, 5 * startY, 80, 5, 130, 0, 0, 20);
                   rectBullets.add(b);
