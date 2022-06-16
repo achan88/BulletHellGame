@@ -1164,7 +1164,10 @@ public class Sketch extends PApplet {
    * 
    */
 
-  // Set booleans when wasd keys are pressed
+  
+   /**
+    * Set booleans when wasd keys are pressed
+    */
   public void keyPressed() {
     if (key == 'w') {
       upPressed = true;
@@ -1205,14 +1208,31 @@ public class Sketch extends PApplet {
  
 
 
-  // calculates the angle between 2 points in degrees
+  /**
+   * Calculates the angle between 2 points in degrees
+   * @param x1: x coordinate of point1
+   * @param y1: y coordinate of point1
+   * @param x2: x coordinate of point2
+   * @param y2: y coordinate of point2
+   * @return: The angle between the two points in degrees
+   */
   public double getAngle(double x1, double y1, double x2, double y2){
     double angle = atan2((int)y2 - (int)y1, (int)x2 - (int)x1) * 180 / PI;
     return angle;
   }
  
 
-  // calculates collision between circle and rectangle
+  /**
+   * Calculates collision between a circle and a rectangle
+   * @param circleX: X coordinate of circle
+   * @param circleY: Y coordinate of circle
+   * @param size: width or height of circle (circle should have equal width and height)
+   * @param rectangleX: X coordinate of rectangle
+   * @param rectangleY: Y coordinate of rectangle
+   * @param rectangleWidth: Width of rectangle
+   * @param rectangleHeight: Height of rectangle
+   * @return: True if rectangle and circle are colliding, false if they are not colliding
+   */
   public boolean circleRect(double circleX, double circleY, float size, double rectangleX, double rectangleY, float rectangleWidth, float rectangleHeight) {
     float radius = size/2;
     radius *= 0.6;
@@ -1242,7 +1262,18 @@ public class Sketch extends PApplet {
     return false;
   }
  
-  // calculates collision between two rectangles
+  /**
+   * Calculates collision between two rectangles
+   * @param rect1X: X coordinate of first rectangle
+   * @param rect1Y: Y coordinate of first rectangle
+   * @param rect1Width: Width of first rectangle
+   * @param rect1Height: Height of first rectangle
+   * @param rect2X: X coordinate of second rectangle
+   * @param rect2Y: Y coordinate of second rectangle
+   * @param rect2Width: Width of second rectangle
+   * @param rect2Height: Height of second rectangle
+   * @return: True if the two rectangles are colliding, false if they are not colliding
+   */
   public boolean rectRect(double rect1X, double rect1Y, float rect1Width, float rect1Height, double rect2X, double rect2Y, float rect2Width, float rect2Height){
     if (rect1X < rect2X + rect2Width - 2 && rect1X+rect1Width > rect2X + 2 && rect1Y < rect2Y + rect2Height -2 && rect1Y + rect1Height > rect2Y + 2){
       return true;
@@ -1250,7 +1281,14 @@ public class Sketch extends PApplet {
     return false;
   }
  
-  // sets bossXSpd and bossYSpd
+  /**
+   * Sets bossXSpd and bossYSpd
+   * @param x: X coordinate
+   * @param y: Y coordinate
+   * @param destx: X destination coordinate
+   * @param desty: Y destination coordinate
+   * @param speed: Speed of boss
+   */
   public void bossMove(double x, double y, double destx, double desty, int speed){
     if(x < destx + speed && x > destx - speed && y < desty + speed && y > desty - speed){
       bossXSpd = 0;
@@ -1278,6 +1316,7 @@ public class Sketch extends PApplet {
  *
  */
 
+ // playerbullet class
   class playerBullet {
   double X;
   double Y;
@@ -1314,6 +1353,7 @@ public class Sketch extends PApplet {
    }
   }
  
+  // normal bullet class
   class normalBullet {
     double X;
     double Y;
@@ -1366,6 +1406,8 @@ public class Sketch extends PApplet {
     }
  
   }
+  
+  // rectangle bullet class
   class rectBullet {
     double X;
     double Y;
@@ -1407,6 +1449,7 @@ public class Sketch extends PApplet {
   }
  
  
+  // bomb bullet class
   class bomb {
     double X;
     double Y;
@@ -1463,7 +1506,7 @@ public class Sketch extends PApplet {
     }
   }
  
-    class beam {
+  class beam {
     double X;
     double Y;
     int size;
@@ -1475,7 +1518,7 @@ public class Sketch extends PApplet {
       this.size = size;
       time = 0;
     }
- 
+
     void update() {
       time++;
       if(time < 60){
