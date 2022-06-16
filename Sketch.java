@@ -222,10 +222,10 @@ public class Sketch extends PApplet {
     if (startGame) {
 
       // combat timer for health regeneration
-      if(combatTimer > 0){
+      if(combatTimer > 0) {
       combatTimer--;
       }
-      if(combatTimer == 0 && playerHealth < playerMaxHealth && frameCount % 5 == 0){
+      if(combatTimer == 0 && playerHealth < playerMaxHealth && frameCount % 5 == 0) {
         playerHealth++;
       }
 
@@ -246,19 +246,19 @@ public class Sketch extends PApplet {
 
 
       // player movement and change sprite based on direction
-      if(upPressed && playerY > 400){
+      if (upPressed && playerY > 400) {
         playerY -= playerSpd;
         playerSprite = player[0];
       }
-      if(downPressed && playerY < 1586){
+      if (downPressed && playerY < 1586) {
         playerY += playerSpd;
         playerSprite = player[1];
       }
-      if(leftPressed && playerX > 412){
+      if (leftPressed && playerX > 412) {
         playerX -= playerSpd;
         playerSprite = player[3];
       }
-      if(rightPressed && playerX < 1588){
+      if (rightPressed && playerX < 1588) {
         playerX += playerSpd;
         playerSprite = player[2];
       }
@@ -276,7 +276,7 @@ public class Sketch extends PApplet {
         }
 
       // translate screen to centre player
-      translate(-(float)playerX+400, -(float)playerY+400);
+      translate(-(float)playerX + 400, -(float)playerY + 400);
     
       image(background, 0, 0);
 
@@ -284,7 +284,7 @@ public class Sketch extends PApplet {
       fill(50);
       rect((float)playerX - 14, (float)playerY + 24, 24, 2);
       fill(0, 255, 0);
-      if(playerHealth < playerMaxHealth/2){
+      if (playerHealth < playerMaxHealth/2) {
       fill(255, 165, 50);
       }
       rect((float)playerX - 14, (float)playerY + 24, (float)(playerHealth / (playerMaxHealth / 24)), 2);
@@ -297,7 +297,7 @@ public class Sketch extends PApplet {
       
       // beam update and collision detection
       Iterator <beam> beamItr = beams.iterator();
-      while(beamItr.hasNext()) {
+      while (beamItr.hasNext()) {
         beam i = beamItr.next();
         i.update();
         if (i.time > 60) {
@@ -374,7 +374,7 @@ public class Sketch extends PApplet {
 
         // when fuse runs out, create 8 normal bullets in 360 degrees
         if (i.fuse == 0){
-          for (int j = 0; j < 8; j++){
+          for (int j = 0; j < 8; j++) {
             normalBullet b = new normalBullet((int) i.X, (int) i.Y, j * 45, 10, 20, 5, 10, false, false);
             normalBullets.add(b);
           }
@@ -507,7 +507,7 @@ public class Sketch extends PApplet {
         // after 2 seconds, boss shoots a ring of 16 bullets every 10 frames
         if (attackTimer < 2400) {
           bossSprite = bossAttack;
-          if(frameCount % 30 >= 0 && frameCount % 30 < 5){
+          if (frameCount % 30 >= 0 && frameCount % 30 < 5) {
             bossSprite = bossReady;
           }
           if (frameCount % 30 == 0) {
@@ -516,13 +516,13 @@ public class Sketch extends PApplet {
               normalBullets.add(b);
             }
           }
-          else if (frameCount % 20 == 0){
+          else if (frameCount % 20 == 0) {
             for (int i = 0; i < 16; i++) {
               normalBullet b = new normalBullet(bossX, bossY, i * 22.5, 20, 5, 300, 10, false, false);
               normalBullets.add(b);
             }
           }
-          else if (frameCount % 10 == 0){
+          else if (frameCount % 10 == 0) {
             for (int i = 0; i < 16; i++) {
               normalBullet b = new normalBullet(bossX, bossY, i*22.5 + 7.5, 20, 5, 300, 10, false, false);
               normalBullets.add(b);
@@ -626,7 +626,7 @@ public class Sketch extends PApplet {
             normalBullets.add(h);
 
             bossSprite = bossReady;
-            if(frameCount%30 >=0 && frameCount%30 <5) {
+            if(frameCount % 30 >= 0 && frameCount % 30 < 5) {
               bossSprite = bossAttack;
             }
           }
@@ -669,7 +669,7 @@ public class Sketch extends PApplet {
         if (bossX > 1600) {
           bossX = 1600;
         }
-        if (bossY < 400){
+        if (bossY < 400) {
           bossY = 400;
         }
         if (bossY > 1600) {
@@ -1512,7 +1512,7 @@ public class Sketch extends PApplet {
     int size;
     int time;
     boolean hasHit = false;
-    beam(double x, double y, int size){
+    beam(double x, double y, int size) {
       this.X = x;
       this.Y = y;
       this.size = size;
