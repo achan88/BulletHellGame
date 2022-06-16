@@ -23,9 +23,11 @@ The player controls Gardevoir using WASD. You are able to press multiple keys at
 
 NOTE: The speed boost ability has a cooldown, which is the indicator below your health bar.
 
-The boss has 3 phases. Each phase has 3 new attacks. Figure out what they are and try to avoid them.
+The boss has 3 phases. Each phase has 3 different attacks. Figure out what they are and try to avoid them.
 
-The player has 100 HP. The player regerates HP after 3 seconds of not taking damage.
+The player has 100 HP. The player rapidly regenerates HP after 3 seconds of not taking damage.
+
+Shot types can be found in the in-game help menu. Certain shots are sometimes used to indicate a more deadly attack, so watch out!
 
 Dodge the shots to survive! :)
 
