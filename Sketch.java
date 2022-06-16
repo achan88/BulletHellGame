@@ -1210,6 +1210,7 @@ public class Sketch extends PApplet {
 
   /**
    * Calculates the angle between 2 points in degrees
+   * @author: T. Guo
    * @param x1: x coordinate of point1
    * @param y1: y coordinate of point1
    * @param x2: x coordinate of point2
@@ -1224,6 +1225,7 @@ public class Sketch extends PApplet {
 
   /**
    * Calculates collision between a circle and a rectangle
+   * @author: A. Chan
    * @param circleX: X coordinate of circle
    * @param circleY: Y coordinate of circle
    * @param size: width or height of circle (circle should have equal width and height)
@@ -1264,6 +1266,7 @@ public class Sketch extends PApplet {
  
   /**
    * Calculates collision between two rectangles
+   * @author: T. Guo
    * @param rect1X: X coordinate of first rectangle
    * @param rect1Y: Y coordinate of first rectangle
    * @param rect1Width: Width of first rectangle
@@ -1283,6 +1286,7 @@ public class Sketch extends PApplet {
  
   /**
    * Sets bossXSpd and bossYSpd
+   * @author: T. Guo
    * @param x: X coordinate
    * @param y: Y coordinate
    * @param destx: X destination coordinate
