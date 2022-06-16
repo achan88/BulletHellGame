@@ -312,7 +312,7 @@ public class Sketch extends PApplet {
         }
       }
 
-      // shoot player bullet every 5 frames in diretion of cursor
+      // shoot player bullet every 5 frames in direction of cursor
       if (frameCount % 5 == 0 && mousePressed) {
         playerBullet b = new playerBullet(playerX, playerY, mouseX+playerX-400, mouseY+playerY-400);
         playerBullets.add(b);
