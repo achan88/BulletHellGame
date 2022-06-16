@@ -6,7 +6,7 @@ Gardevoir Strikes Back is a single-player 2D bullet-hell game created by Tyler G
 
 # Game Objective
 
-Oryx The Mad God is trying to take over the realm of Pokémon! Luckily, he appears to be weak to Psychic type attacks. One brave pokemon has escaped cativity and challenged the malign deity to a duel. Even with a type advantage, this fight will not be easy. 
+Oryx The Mad God is trying to take over the realm of Pokémon! Luckily, he appears to be weak to Psychic type attacks. One brave Pokémon has escaped captivity and challenged the malign deity to a duel. Even with a type advantage, this fight will not be easy. 
 As Gardevoir, you must defeat Oryx to save the Pokémon realm. The state of the Pokémon world rests on your shoulders.
 
 # Gameplay Mechanics
