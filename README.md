@@ -1,46 +1,59 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=7918860&assignment_repo_type=AssignmentRepo)
-# Gardevoir Strikes Back
+# The Realm of Bullets
 
-Gardevoir Strikes Back is a single-player 2D bullet-hell game created by Tyler Guo and Andrew Chan. It was designed as a school project and makes use of the Java Processing library. 
+**The Realm of Bullets** is a single-player 2D bullet-hell game created by Andrew Chan and Tyler Guo. This project utilizes the Java Processing library to deliver an engaging gaming experience.
 
+# Introduction
+
+The malevolent Oryx The Mad God is on a quest to seize control of the Pokémon realm! Fortunately, Oryx has a weakness – Psychic type attacks. Seizing the opportunity, a courageous Pokémon, Gardevoir, has broken free from captivity to confront the deity in a fierce duel. Despite the type advantage, defeating Oryx will be no walk in the park. As Gardevoir, your mission is to vanquish Oryx and save the Pokémon realm, with the fate of the entire world resting on your shoulders.
 
 # Game Objective
 
-Oryx The Mad God is trying to take over the realm of Pokémon! Luckily, he appears to be weak to Psychic type attacks. One brave Pokémon has escaped captivity and challenged the malign deity to a duel. Even with a type advantage, this fight will not be easy. 
-As Gardevoir, you must defeat Oryx to save the Pokémon realm. The state of the Pokémon world rests on your shoulders.
+Your mission is to navigate through increasingly challenging levels filled with enemy bullets and defeat Oryx the Mad God. Dodge and  weave your way through the chaos to emerge victorious.
 
 # Gameplay Mechanics
 
-The player controls Gardevoir using WASD. You are able to press multiple keys at once to move diagonally.
+- **Movement:**
+  - **W:** Move Up
+  - **A:** Move Left
+  - **S:** Move Down
+  - **D:** Move Right
 
-* W: Up
-* A: Left
-* S: Down
-* D: Right
+- **Abilities:**
+  - **Space Bar:** Activate Speed Boost Ability
+    - *Note: Keep an eye on the cooldown indicator below your health bar.*
 
-* Space Bar: Speed boost ability
-* Mouse Click: Shoot projectiles in the direction of your cursor
+- **Attack:**
+  - **Mouse Click:** Shoot projectiles in the direction of your cursor
 
-NOTE: The speed boost ability has a cooldown, which is the indicator below your health bar.
+- **Boss Phases:**
+  - Oryx has three distinct phases, each featuring three different attacks. Adapt and learn to dodge effectively.
 
-The boss has 3 phases. Each phase has 3 different attacks. Figure out what they are and try to avoid them.
+- **Player Health:**
+  - The player starts with 100 HP.
+  - Health regenerates rapidly after 3 seconds of not taking damage.
 
-The player has 100 HP. The player rapidly regenerates HP after 3 seconds of not taking damage.
+- **Bullet Types:**
+  - Consult the in-game help menu for details on different bullet types.
+  - Be vigilant, as certain shots may indicate more potent attacks.
 
-The different types of bullets are described in the in-game help menu. Certain shots are sometimes used to indicate a more deadly attack, so watch out!
-
-Dodge the shots to survive! :)
+- **Survival:**
+  - Dodge incoming shots to stay alive!
 
 # Scoring
 
-The player wins by defeating the boss (boss health reaches 0). The player loses if your health bar reaches 0. Be careful, and good luck.
+- **Victory:**
+  - Defeat the boss by reducing its health to zero.
 
-# Limitations
+- **Defeat:**
+  - Player loses if the health bar reaches zero.
 
-Audio has not been implemented
+- **Caution:**
+  - Navigate with care, and may luck be on your side!
 
+# Developer Information
 
+- **Developers:** Andrew Chan and Tyler Guo
+- **Programming Languages:** Java
+- **Library:** Processing
 
-
-
-
+Enjoy the intense bullet-hell action and save the Pokémon realm from the clutches of Oryx The Mad God. Good luck, Trainer!
