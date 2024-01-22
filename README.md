@@ -8,7 +8,7 @@ The malevolent Oryx The Mad God is on a quest to seize control of the Pokémon r
 
 # Game Objective
 
-Your mission is to navigate through increasingly challenging levels filled with enemy bullets and defeat Oryx the Mad God. Dodge and  weave your way through the chaos to emerge victorious.
+Your mission is to navigate through increasingly challenging boss phases filled with different projectiles and defeat Oryx the Mad God. Dodge and weave your way through the chaos to emerge victorious.
 
 # Gameplay Mechanics
 
