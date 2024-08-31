@@ -90,42 +90,42 @@ public class Sketch extends PApplet {
    */
   public void setup() {
     frameRate(30);
-    background1 = loadImage("dark_background.png");
-    background2 = loadImage("default_background.png");
-    background3 = loadImage("light_background.png");
+    background1 = loadImage("./Stage/dark_background.png");
+    background2 = loadImage("./Stage/default_background.png");
+    background3 = loadImage("./Stage/light_background.png");
     
     
-    bossDefault1 = loadImage("black_default.png");
-    bossDefault2 = loadImage("silver_default.png");
-    bossDefault3 = loadImage("white_default_cropped.png");
-    bossSword1 = loadImage("black_sword.png");
-    bossSword2 = loadImage("silver_sword.png");
-    bossShield3 = loadImage("white_shield_cropped.png");
-    bossSlash1 = loadImage("black_slash.png");
-    bossSlash2 = loadImage("silver_slash.png");
-    bossSlash3 = loadImage("white_slash_cropped.png");
+    bossDefault1 = loadImage("./Sprites/black_default.png");
+    bossDefault2 = loadImage("./Sprites/silver_default.png");
+    bossDefault3 = loadImage("./Sprites/white_default_cropped.png");
+    bossSword1 = loadImage("./Sprites/black_sword.png");
+    bossSword2 = loadImage("./Sprites/silver_sword.png");
+    bossShield3 = loadImage("./Sprites/white_shield_cropped.png");
+    bossSlash1 = loadImage("./Sprites/black_slash.png");
+    bossSlash2 = loadImage("./Sprites/silver_slash.png");
+    bossSlash3 = loadImage("./Sprites/white_slash_cropped.png");
 
-    menuScreen[0] = loadImage("start_menu.png");
-    menuScreen[1] = loadImage("start_highlight.png");
-    menuScreen[2] = loadImage("help_highlight.png");
-    menuScreen[3] = loadImage("credits_highlight.png");
-    menuScreen[4] = loadImage("credits.png");
-    menuScreen[5] = loadImage("help.png");
-    menuScreen[6] = loadImage("credits_coloured.png");
-    menuScreen[7] = loadImage("help_coloured.png");
-    menuScreen[8] = loadImage("win_screen.png");
-    menuScreen[9] = loadImage("lose_screen.png");
-    menuScreen[10] = loadImage("lose_highlighted.png");
- 
+    player[0] = loadImage("./Sprites/Gardevoir_Up.png");
+    player[1] = loadImage("./Sprites/Gardevoir_Down.png");
+    player[2] = loadImage("./Sprites/Gardevoir_Right.png");
+    player[3] = loadImage("./Sprites/Gardevoir_Left.png");
+    player[4] = loadImage("./Sprites/Gardevoir_Up_Left.png");
+    player[5] = loadImage("./Sprites/Gardevoir_Up_Right.png");
+    player[6] = loadImage("./Sprites/Gardevoir_Down_Left.png");
+    player[7] = loadImage("./Sprites/Gardevoir_Down_Right.png");
 
-    player[0] = loadImage("Gardevoir_Up.png");
-    player[1] = loadImage("Gardevoir_Down.png");
-    player[2] = loadImage("Gardevoir_Right.png");
-    player[3] = loadImage("Gardevoir_Left.png");
-    player[4] = loadImage("Gardevoir_Up_Left.png");
-    player[5] = loadImage("Gardevoir_Up_Right.png");
-    player[6] = loadImage("Gardevoir_Down_Left.png");
-    player[7] = loadImage("Gardevoir_Down_Right.png");
+    menuScreen[0] = loadImage("./Menu/start_menu.png");
+    menuScreen[1] = loadImage("./Menu/start_highlight.png");
+    menuScreen[2] = loadImage("./Menu/help_highlight.png");
+    menuScreen[3] = loadImage("./Menu/credits_highlight.png");
+    menuScreen[4] = loadImage("./Menu/credits.png");
+    menuScreen[5] = loadImage("./Menu/help.png");
+    menuScreen[6] = loadImage("./Menu/credits_coloured.png");
+    menuScreen[7] = loadImage("./Menu/help_coloured.png");
+    menuScreen[8] = loadImage("./Menu/win_screen.png");
+    menuScreen[9] = loadImage("./Menu/lose_screen.png");
+    menuScreen[10] = loadImage("./Menu/lose_highlighted.png");
+
     playerX = 800;
     playerY = 800;
     playerSprite = player[1];
